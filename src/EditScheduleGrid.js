@@ -4,7 +4,7 @@ import TimeInput from 'time-input'
 import styles from './EditSchedule.scss'
 import {codeToTime, days} from './date-utils'
 
-export default class EditSchedule extends React.Component {
+export default class EditScheduleGrid extends React.Component {
   constructor(props) {
     super(props)
     this.state = {qq: '12:00', selection: _.clone(props.schedule)}

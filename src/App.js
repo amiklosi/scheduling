@@ -1,6 +1,6 @@
 import React from 'react'
 import _ from 'lodash'
-import EditSchedule from "./EditSchedule"
+import EditScheduleGrid from './EditScheduleGrid'
 import {codeToTime, days} from './date-utils'
 import AddNewTime from "./AddNewTime";
 
@@ -30,6 +30,11 @@ class Scheduling extends React.Component {
     this.setState({addingNewTime: true})
   }
 
+  handleAddNewAvailableTime = (ranges) => {
+    console.log('adding new avail', ranges)
+
+  }
+
   state = {}
 
 
@@ -53,9 +58,9 @@ class Scheduling extends React.Component {
         <li>Except From</li>
       </ul>
       <span onClick={this.addNewTime}>Add new available time</span>
-      {this.state.addingNewTime && <AddNewTime onCancel={()=>this.setState({addingNewTime: false})}/>}
+      {this.state.addingNewTime && <AddNewTime onCancel={()=>this.setState({addingNewTime: false})} onAddNew={this.handleAddNewAvailableTime}/>}
       {this.state.editingDefault &&
-      <EditSchedule schedule={this.state.defaultSchedule} onUpdate={this.onUpdateSchedule}/>}
+      <EditScheduleGrid schedule={this.state.defaultSchedule} onUpdate={this.onUpdateSchedule}/>}
 
       <h2>Blocked Time</h2>
     </div>

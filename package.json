@@ -38,6 +38,6 @@
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
     "sass-loader": "^6.0.5",
-    "time-input": "^1.4.0"
+    "time-input": "git+ssh://git@github.com/smashcut/time-input.git#smashcut"
   }
 }

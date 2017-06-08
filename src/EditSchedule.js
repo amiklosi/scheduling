@@ -2,7 +2,8 @@ import React from 'react'
 import _ from 'lodash'
 import TimeInput from 'time-input'
 import styles from './EditSchedule.scss'
-let days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+import {codeToTime, days} from './date-utils'
+
 export default class EditSchedule extends React.Component {
   constructor(props) {
     super(props)
@@ -10,7 +11,9 @@ export default class EditSchedule extends React.Component {
   }
 
   removeRange = (range) => {
-    this.setState({selection: _.reject(this.state.selection, s => s == range)})
+    this.state.selection = _.reject(this.state.selection, s => s == range)
+    this.setState({selection: this.state.selection})
+    this.props.onUpdate(this.state.selection)
   }
 
   addNewRange(day) {
@@ -18,21 +21,15 @@ export default class EditSchedule extends React.Component {
     let utc = dayIndex * 24
     this.state.selection.push([utc, utc])
     this.setState({})
+    this.props.onUpdate(this.state.selection)
   }
 
   render() {
 
     let thead = _.map(days, day => <th key={day}>{day}</th>)
-    let pad = (n) => n < 10 ? '0' + n : n
     let entryRow = _.map(days, day => {
       let cellClass = ''
       let dayIndex = _.indexOf(days, day)
-      let codeToTime = (code) => {
-        let h = Math.floor(code)
-        let m = code == h ? '00' : '30'
-        let val = pad(h - dayIndex * 24) + ':' + m
-        return val
-      }
       let rangesForDay = _(this.state.selection)
         .filter(s => Math.floor(s[0] / 24) == dayIndex)
         .map((v, i) => {
@@ -44,12 +41,13 @@ export default class EditSchedule extends React.Component {
 
               range[idx] = hour + dayIndex * 24
               this.setState({selection: this.state.selection})
+              this.props.onUpdate(this.state.selection)
             }
 
             return <div key={i} className={styles.hourInputsHolder}>
-              <TimeInput className={styles.hourInput} value={codeToTime(v[0])} onChange={updateTime(0)}/>
+              <TimeInput className={styles.hourInput} value={codeToTime(v[0], dayIndex)} onChange={updateTime(0)}/>
               -
-              <TimeInput className={styles.hourInput} value={codeToTime(v[1])} onChange={updateTime(1)}/>
+              <TimeInput className={styles.hourInput} value={codeToTime(v[1], dayIndex)} onChange={updateTime(1)}/>
               <span onClick={this.removeRange.bind(this, range)}>x</span>
             </div>
           }
@@ -57,7 +55,7 @@ export default class EditSchedule extends React.Component {
         .value()
       return <td key={day} className={cellClass}>{rangesForDay}</td>
     })
-    let addRow = _.map(days, day => <td key={day} onClick={this.addNewRange.bind(this, day)}>Add</td>)
+    let addRow = _.map(days, day => <td className={styles.addButton} key={day} onClick={this.addNewRange.bind(this, day)}>+</td>)
     let tbody = <tbody>
     <tr>
       {entryRow}

@@ -1,9 +1,13 @@
 .scheduleTable {
   border-collapse: collapse;
+  th {
+    background-color: #444444;
+  }
   td {
     vertical-align: top;
     min-height: 20px;
     width: 100px;
+    border-right: 1px solid #777;
 
     &:hover {
     }
@@ -18,6 +22,10 @@
   }
 }
 
+.addButton {
+  cursor: pointer;
+}
+
 .hourInputsHolder {
   display: inline-block;
 }
@@ -26,6 +34,7 @@
 
   display: inline-block;
   input {
+    border: 1px solid black;
     width: 30px;
   }
 }

@@ -34,8 +34,10 @@
     "webpack-dev-server": "^2.4.2"
   },
   "dependencies": {
+    "moment": "^2.18.1",
     "node-sass": "^4.5.3",
     "react": "^15.4.1",
+    "react-datepicker": "^0.47.0",
     "react-dom": "^15.4.1",
     "sass-loader": "^6.0.5",
     "time-input": "git+ssh://git@github.com/smashcut/time-input.git#smashcut"

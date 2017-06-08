@@ -2,6 +2,7 @@ import React from 'react'
 import _ from 'lodash'
 import EditSchedule from "./EditSchedule"
 import {codeToTime, days} from './date-utils'
+import AddNewTime from "./AddNewTime";
 
 class Scheduling extends React.Component {
 
@@ -10,7 +11,7 @@ class Scheduling extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      editingDefault: true,
+      editingDefault: false,
       defaultSchedule: [[32, 33], [56, 60], [62, 64], [34, 36]]
     }
   }
@@ -23,6 +24,10 @@ class Scheduling extends React.Component {
     console.log('sc updated', newValue)
     this.setState({defaultSchedule: newValue})
 
+  }
+
+  addNewTime = () => {
+    this.setState({addingNewTime: true})
   }
 
   state = {}
@@ -38,12 +43,17 @@ class Scheduling extends React.Component {
     return <div>
       <h1>My Availability</h1>
       <h2>Available Time</h2>
-      <h3>Default Schedule</h3>
-      {Object.keys(dayMap).map(day =>
-        <div key={day}>
-          {day}: {dayMap[day].join(', ')}
-        </div>)
-      } <a onClick={this.editDefaultSchedule}>Edit</a>
+      <ul>
+        <li>Default Schedule</li>
+        {Object.keys(dayMap).map(day =>
+          <div key={day}>
+            {day}: {dayMap[day].join(', ')}
+          </div>)
+        } <a onClick={this.editDefaultSchedule}>Edit</a>
+        <li>Except From</li>
+      </ul>
+      <span onClick={this.addNewTime}>Add new available time</span>
+      {this.state.addingNewTime && <AddNewTime onCancel={()=>this.setState({addingNewTime: false})}/>}
       {this.state.editingDefault &&
       <EditSchedule schedule={this.state.defaultSchedule} onUpdate={this.onUpdateSchedule}/>}
 

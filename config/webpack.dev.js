@@ -1,9 +1,19 @@
-const path = require('path');
-const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path')
+const webpack = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
-const srcDir = path.resolve(__dirname, '..', 'src');
-const distDir = path.resolve(__dirname, '..', 'dist');
+const srcDir = path.resolve(__dirname, '..', 'src')
+const distDir = path.resolve(__dirname, '..', 'dist')
+
+var cssLoaderConfig = {
+  loader: 'css-loader',
+  options: {
+    modules: true,
+    sourceMap: true,
+    importLoaders: 1,
+    localIdentName: '[name]--[local]--[hash:base64:8]'
+  }
+}
 
 module.exports = {
   context: srcDir,
@@ -49,6 +59,14 @@ module.exports = {
         ]
       },
       {
+        test: /\.scss/,
+        use: [
+          'style-loader',
+          cssLoaderConfig,
+          'sass-loader',
+        ]
+      },
+      {
         test: /\.(jpg|jpeg|png|gif|ico|svg)$/,
         loader: 'url-loader',
         query: {
@@ -60,6 +78,7 @@ module.exports = {
   },
 
   plugins: [
+    new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
 
     new HtmlWebpackPlugin({
@@ -73,4 +92,4 @@ module.exports = {
       // the output file name
     }),
   ],
-};
+}

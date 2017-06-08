@@ -6,6 +6,17 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const srcDir = path.resolve(__dirname, '..', 'src');
 const distDir = path.resolve(__dirname, '..', 'dist');
 
+var cssLoaderConfig = {
+  loader: 'css-loader',
+  options: {
+    modules: true,
+    sourceMap: true,
+    importLoaders: 1,
+    localIdentName: '[name]--[local]--[hash:base64:8]'
+  }
+}
+
+
 module.exports = {
   // Where to fine the source code
   context: srcDir,
@@ -47,8 +58,6 @@ module.exports = {
   module: {
     rules: [
       {
-        // Webpack, when walking down the tree, whenever you see `.js` file use babel to transpile
-        // the code to ES5. I don't want you to look into the node_modules folder.
         test: /\.js$/,
         exclude: /node_modules/,
         use: [
@@ -56,24 +65,13 @@ module.exports = {
         ],
       },
       {
-        test: /\.css$/,
-        exclude: /node_modules/,
-        // It's production mode and I don't want inline CSS so put all my CSS into a file
-        loader: ExtractTextPlugin.extract({
-          fallbackLoader: 'style-loader',
-          loader: 'css-loader',
-        }),
-      },
-      {
-        test: /\.(jpg|jpeg|png|gif|ico|svg)$/,
-        loader: 'url-loader',
-        query: {
-          // if less, bundle the asset inline, if greater, copy it to the dist/assets folder using file-loader
-          limit: 10000,
-
-          name: 'assets/[name].[hash].[ext]'
-        },
-      },
+        test: /\.scss/,
+        use: [
+          'style-loader',
+          cssLoaderConfig,
+          'sass-loader',
+        ]
+      }
     ]
   },
 
@@ -102,19 +100,16 @@ module.exports = {
       filename: 'index.html'
     }),
 
-    new webpack.optimize.UglifyJsPlugin({
-      beautify: false,
-      mangle: {
-        screw_ie8: true,
-        keep_fnames: true
-      },
-      compress: {
-        screw_ie8: true
-      },
-      comments: false
-    }),
-
-    // Put all css code in this file
-    new ExtractTextPlugin('app-[hash].css'),
+    // new webpack.optimize.UglifyJsPlugin({
+    //   beautify: false,
+    //   mangle: {
+    //     screw_ie8: true,
+    //     keep_fnames: true
+    //   },
+    //   compress: {
+    //     screw_ie8: true
+    //   },
+    //   comments: false
+    // })
   ],
 };

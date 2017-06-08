@@ -1,15 +1,9 @@
-import './app.css';
+import React from 'react';
+import { render } from 'react-dom';
+import App from './App'
+import styles from './EditSchedule.scss'
 
-import jsImg from './assets/js.png';
-
-const page = `
-<div class="main">
-  <h1>ES6 + Webpack 2 starter</h1>
-  <div>
-    <img src="${jsImg}" alt="JavaScript"/>
-  </div>
-  <h2>Paulo Chaves from Piaui, Brazil</h2>
-</div>
-`;
-
-document.getElementById('root').innerHTML = page;
+render(
+  <App />,
+  document.getElementById('root')
+);

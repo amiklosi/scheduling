@@ -2,7 +2,7 @@ import React from 'react'
 import _ from 'lodash'
 import TimeInput from 'time-input'
 import styles from './EditScheduleGrid.scss'
-import {codeToTime, days} from './date-utils'
+import {codeToTime, timeToCode, days} from './date-utils'
 
 export default class EditScheduleGrid extends React.Component {
   constructor(props) {
@@ -39,7 +39,7 @@ export default class EditScheduleGrid extends React.Component {
               let mins = Number(nv.split(':')[1])
               hour += mins / 60
 
-              range[idx] = hour + dayIndex * 24
+              range[idx] = timeToCode(nv) + dayIndex * 24
               this.setState({selection: this.state.selection})
               this.props.onUpdate(this.state.selection)
             }

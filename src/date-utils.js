@@ -2,10 +2,18 @@ export const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
 export const pad = (n) => n < 10 ? '0' + n : n
 
-export const codeToTime = (code, dayIndex) => {
+export const codeToTime24 = (code, dayIndex) => {
   let h = Math.floor(code)
   let m = code == h ? '00' : '30'
   return pad(h - dayIndex * 24) + ':' + m
+}
+
+export const codeToTime = (code, dayIndex) => {
+  let h = Math.floor(code)
+  let m = code == h ? '00' : '30'
+  let normalizedH = (h - dayIndex * 24)
+  let displayH = normalizedH % 12 == 0 ? 12 : normalizedH % 12
+  return pad(displayH) + ':' + m + ' ' + (normalizedH == 24 ? 'AM' : (normalizedH >= 12 ? 'PM' : 'AM'))
 }
 
 export const timeToCode = (time) => {

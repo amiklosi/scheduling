@@ -20,6 +20,15 @@ module.exports = {
       },
       {
         test: /\.css$/,
+        include: /react-select/,
+        use: [
+          'style-loader',
+          'css-loader'
+        ]
+      },
+      {
+        test: /\.css$/,
+        exclude: /react-select/,
         use: [
           'style-loader',
           cssLoaderConfig,

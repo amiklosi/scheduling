@@ -122,8 +122,9 @@ class Scheduling extends React.Component {
     return <div>
       <h1>My Availability</h1>
       <h2>Available Time</h2>
-      <div style={{width: 105}}>
+      <div style={{width: 80}}>
         <Select
+          className="mySelect"
           name="form-field-name"
           value={this.state.fromTime}
           options={options}
@@ -174,7 +175,7 @@ class Scheduling extends React.Component {
         <AddNewTime onCancel={() => this.setState({addingNewTime: false})} onAddNew={this.handleAddNewAvailableTime}/>
       </Dialog>
 
-      <Dialog active={this.state.editingDefault}>
+      <Dialog active={this.state.editingDefault} type='large'>
         <EditScheduleGrid schedule={this.state.defaultSchedule} onUpdate={this.onUpdateSchedule}/>
         <Button primary onClick={this.setDefaultSchedule}>Set</Button>
         <Button primary onClick={this.cancelEditingDefaultSchedule}>Cancel</Button>

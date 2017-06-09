@@ -3,6 +3,7 @@ import _ from 'lodash'
 import TimeInput from 'time-input'
 import styles from './EditScheduleGrid.scss'
 import {codeToTime, timeToCode, days} from './date-utils'
+import ClickToEditTime from './ClickToEditTime'
 
 export default class EditScheduleGrid extends React.Component {
   constructor(props) {
@@ -45,9 +46,10 @@ export default class EditScheduleGrid extends React.Component {
             }
 
             return <div key={i} className={styles.hourInputsHolder}>
-              <TimeInput className={styles.hourInput} value={codeToTime(v[0], dayIndex)} onChange={updateTime(0)}/>
+              <ClickToEditTime className={styles.hourInput} value={codeToTime(v[0], dayIndex)} onChange={updateTime(0)}/>
               -
-              <TimeInput className={styles.hourInput} value={codeToTime(v[1], dayIndex)} onChange={updateTime(1)}/>
+              <ClickToEditTime className={styles.hourInput} value={codeToTime(v[1], dayIndex)} onChange={updateTime(0)}/>
+              {/*<TimeInput className={styles.hourInput} value={codeToTime(v[1], dayIndex)} onChange={updateTime(1)}/>*/}
               <span onClick={this.removeRange.bind(this, range)}>x</span>
             </div>
           }

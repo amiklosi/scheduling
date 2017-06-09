@@ -5,7 +5,7 @@ import moment from 'moment'
 import TimeInput from 'time-input'
 import 'react-datepicker/dist/react-datepicker-cssmodules.css'
 import EditScheduleGrid from './EditScheduleGrid'
-
+import {timeToCode} from './date-utils.js'
 
 export default class AddNewTime extends React.Component {
 
@@ -25,7 +25,9 @@ export default class AddNewTime extends React.Component {
     if (this.state.advanced) {
       this.props.onAddNew(this.state.startDate, this.state.endDate, this.state.schedule)
     } else {
-      this.props.onAddNew([[0,8]])
+      let fromTime = timeToCode(this.state.startTime)
+      let toTime = timeToCode(this.state.endTime)
+      this.props.onAddNew(this.state.startDate, this.state.startDate, [[fromTime, toTime]])
     }
   }
 

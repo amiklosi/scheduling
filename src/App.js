@@ -3,8 +3,9 @@ import _ from 'lodash'
 import EditScheduleGrid from './EditScheduleGrid'
 import {codeToTime, timeToCode, days} from './date-utils'
 import AddNewTime from "./AddNewTime";
-import { Button } from 'react-toolbox/lib/button';
+import {Button} from 'react-toolbox/lib/button';
 import Dialog from 'react-toolbox/lib/dialog';
+import moment from 'moment'
 
 class Scheduling extends React.Component {
 
@@ -15,9 +16,15 @@ class Scheduling extends React.Component {
     this.state = {
       addingNewTime: false,
       editingDefault: false,
-      defaultSchedule: [[32, 33], [56, 60], [62, 64], [34, 36]]
+      defaultSchedule: [[32, 33], [56, 60], [62, 64], [34, 36]],
+      customSchedules: [
+        {
+          fromDate: moment(),
+          toDate: moment(),
+          schedule: [[8, 12], [14, 16]]
+        }
+      ]
     }
-    console.log(timeToCode('21:30'))
   }
 
   editDefaultSchedule = () => {
@@ -42,21 +49,39 @@ class Scheduling extends React.Component {
     this.setState({addingNewTime: true})
   }
 
-  handleAddNewAvailableTime = (ranges) => {
-    console.log('adding new avail', ranges)
+  handleAddNewAvailableTime = (fromDate, toDate, ranges) => {
+    toDate = toDate || fromDate
+    console.log('adding new avail', fromDate.format(), toDate.format(), ranges)
+    this.state.customSchedules.push(
+      {
+        fromDate,
+        toDate,
+        schedule: ranges
+      }
+    )
+    this.setState({addingNewTime: false})
+  }
 
+  removeCustomSchedule = (customSchedule) => {
+    this.state.customSchedules = _.reject(this.state.customSchedules, s => s == customSchedule)
+    this.setState({})
+  }
+
+  dayMapFromSchedule = (schedule) => {
+    let dayMap = {}
+    _.each(schedule, (range) => {
+      let day = Math.floor(range[0] / 24)
+      dayMap[days[day]] = dayMap[days[day]] || []
+      dayMap[days[day]].push(codeToTime(range[0], day) + ' - ' + codeToTime(range[1], day))
+    })
+    return dayMap
   }
 
   state = {}
 
 
   render() {
-    let dayMap = {}
-    _.each(this.state.defaultSchedule, (range) => {
-      let day = Math.floor(range[0] / 24)
-      dayMap[days[day]] = dayMap[days[day]] || []
-      dayMap[days[day]].push(codeToTime(range[0], day) + ' - ' + codeToTime(range[1], day))
-    })
+    let dayMap = this.dayMapFromSchedule(this.state.defaultSchedule)
     return <div>
       <h1>My Availability</h1>
       <h2>Available Time</h2>
@@ -67,7 +92,20 @@ class Scheduling extends React.Component {
             {day}: {dayMap[day].join(', ')}
           </div>)
         } <a onClick={this.editDefaultSchedule}>Edit</a>
-        <li>Except From</li>
+
+        {this.state.customSchedules.map(cs => {
+          let dayMap = this.dayMapFromSchedule(cs.schedule)
+          return <li>
+            Except {cs.fromDate.format('MMMM Do YYYY')} - {cs.toDate.format('MMMM Do YYYY')}
+            {Object.keys(dayMap).map(day =>
+              <div key={day}>
+                {day}: {dayMap[day].join(', ')}
+              </div>)
+            }
+            <Button inverse onClick={this.removeCustomSchedule.bind(this, cs)}>X</Button>
+          </li>
+        })
+        }
       </ul>
       <span onClick={this.addNewTime}>Add new available time</span>
 

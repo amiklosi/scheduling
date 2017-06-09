@@ -1,20 +1,12 @@
 const path = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const base = require('./base')
 
 const srcDir = path.resolve(__dirname, '..', 'src')
 const distDir = path.resolve(__dirname, '..', 'dist')
 
-var cssLoaderConfig = {
-  loader: 'css-loader',
-  options: {
-    modules: true,
-    sourceMap: true,
-    importLoaders: 1,
-    localIdentName: '[name]--[local]--[hash:base64:8]'
-  }
-}
-
+console.log(base.module)
 module.exports = {
   context: srcDir,
 
@@ -40,42 +32,7 @@ module.exports = {
     historyApiFallback: true,
     port: 3000
   },
-
-  module: {
-    rules: [
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        use: [
-          'babel-loader',
-        ],
-      },
-      {
-        test: /\.css$/,
-        use: [
-          'style-loader',
-          'css-loader'
-        ]
-      },
-      {
-        test: /\.scss/,
-        use: [
-          'style-loader',
-          cssLoaderConfig,
-          'sass-loader',
-        ]
-      },
-      {
-        test: /\.(jpg|jpeg|png|gif|ico|svg)$/,
-        loader: 'url-loader',
-        query: {
-          limit: 10000, // use data url for assets <= 10KB
-          name: 'assets/[name].[hash].[ext]'
-        },
-      },
-    ]
-  },
-
+  module: base.module,
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),

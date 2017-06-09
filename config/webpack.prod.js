@@ -2,7 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-
+const base = require('./base')
 const srcDir = path.resolve(__dirname, '..', 'src');
 const distDir = path.resolve(__dirname, '..', 'dist');
 
@@ -55,25 +55,7 @@ module.exports = {
     inline: false
   },
 
-  module: {
-    rules: [
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        use: [
-          'babel-loader',
-        ],
-      },
-      {
-        test: /\.scss/,
-        use: [
-          'style-loader',
-          cssLoaderConfig,
-          'sass-loader',
-        ]
-      }
-    ]
-  },
+  module: base.module,
 
   plugins: [
     new webpack.NamedModulesPlugin(),

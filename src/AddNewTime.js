@@ -9,15 +9,21 @@ import EditScheduleGrid from './EditScheduleGrid'
 
 export default class AddNewTime extends React.Component {
 
-  handleChange = (date) => {
+  handleStartDateChange = (date) => {
     this.setState({
       startDate: date
     })
   }
 
+  handleEndDateChange = (date) => {
+    this.setState({
+      endDate: date
+    })
+  }
+
   handleSet = () => {
     if (this.state.advanced) {
-      this.props.onAddNew(this.state.schedule)
+      this.props.onAddNew(this.state.startDate, this.state.endDate, this.state.schedule)
     } else {
       this.props.onAddNew([[0,8]])
     }
@@ -44,29 +50,28 @@ export default class AddNewTime extends React.Component {
       <div>
         <DatePicker
           selected={this.state.startDate}
-          onChange={this.handleChange}
+          onChange={this.handleStartDateChange}
         />
 
-        <a onClick={() => this.setState({advanced: true})}>Use advanced</a>
+        <a onClick={() => this.setState({advanced: true, endDate: moment()})}>Use advanced</a>
       </div>
 
       <TimeInput value={this.state.startTime} onChange={nv => this.setState({startTime: nv})}/>
       to
       <TimeInput value={this.state.endTime} onChange={nv => this.setState({endTime: nv})}/>
     </div>
-
     let advancedView = <div>
       <div>
         From:
         <DatePicker
           selected={this.state.startDate}
-          onChange={this.handleChange}
+          onChange={this.handleStartDateChange}
         />
 
         To:
         <DatePicker
-          selected={this.state.startDate}
-          onChange={this.handleChange}
+          selected={this.state.endDate}
+          onChange={this.handleEndDateChange}
         />
 
       </div>

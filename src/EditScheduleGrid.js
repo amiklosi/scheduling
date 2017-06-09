@@ -1,7 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
 import TimeInput from 'time-input'
-import styles from './EditSchedule.scss'
+import styles from './EditScheduleGrid.scss'
 import {codeToTime, days} from './date-utils'
 
 export default class EditScheduleGrid extends React.Component {

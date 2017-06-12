@@ -11,7 +11,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack-dev-server --colors",
+    "start": "webpack-dev-server --colors --hot --inline",
     "build": "rm -rf ./dist && NODE_ENV=production webpack --colors",
     "preview": "NODE_ENV=production webpack-dev-server --colors"
   },
@@ -44,9 +44,9 @@
     "react": "^15.4.1",
     "react-datepicker": "^0.47.0",
     "react-dom": "^15.4.1",
+    "react-onclickoutside": "^6.1.1",
     "react-select": "^1.0.0-rc.5",
     "react-toolbox": "^2.0.0-beta.12",
-    "sass-loader": "^6.0.5",
-    "time-input": "git+ssh://git@github.com/smashcut/time-input.git#smashcut"
+    "sass-loader": "^6.0.5"
   }
 }

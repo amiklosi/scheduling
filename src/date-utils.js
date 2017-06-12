@@ -18,10 +18,13 @@ export const codeToTime = (code, dayIndex) => {
 
 export const timeToCode = (time) => {
   let hourAndMinute = time.match(/[0-9:]+/)[0]
-  let [h,m] = hourAndMinute.split(':').map(v => Number(v))
+  let [h, m] = hourAndMinute.split(':').map(v => Number(v))
   let hasAmPm = !!time.match(/am|pm/i)
   if (hasAmPm) {
     let isAm = !!time.match(/am/i)
+    if (h == 12) {
+      h = 0
+    }
     return isAm ? (h + m / 60) : (h + 12 + m / 60)
   } else {
     return h + m / 60

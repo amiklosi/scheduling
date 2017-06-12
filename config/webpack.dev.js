@@ -34,7 +34,6 @@ module.exports = {
   },
   module: base.module,
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
 
     new HtmlWebpackPlugin({

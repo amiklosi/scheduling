@@ -1,8 +1,10 @@
 import React from 'react'
 import Select from 'react-select'
 import {codeToTime, pad, timeToCode, days} from './date-utils'
+import styles from './ClickToEditTime.scss'
+import onClickOutside from 'react-onclickoutside'
 
-export default class ClickToEditTime extends React.Component {
+class ClickToEditTime extends React.Component {
 
   constructor(props) {
     super(props)
@@ -30,22 +32,42 @@ export default class ClickToEditTime extends React.Component {
 
   state = {}
 
+  handleClickOutside = evt => {
+    this.setState({editingFrom: false, editingTo: false})
+  }
 
   render() {
-    return this.state.editing ? <span>
-      <Select
-        className="mySelect"
+    console.log('qqq', this.props.fromValue)
+    let fromIndex = (_.find(this.options, o => o.label == this.props.fromValue) || {}).value
+    let toIndex = (_.find(this.options, o => o.label == this.props.toValue) || {}).value
+    let filteredOptions = _.filter(this.options, o => o.value > fromIndex)
+    return <div className={styles.topContainer}>
+      {this.state.editingFrom ? <Select
+        autofocus={true}
+        className={styles.clickEditInput}
+        onBlur={() => this.setState({editingFrom: false})}
         name="form-field-name"
-        value={this.state.toTime}
+        value={fromIndex}
         options={this.options}
-        onChange={this.handleToChange}
+        onChange={nv => this.props.onFromChange(nv.label)}
         matchProp='label'
         clearable={false}
-      />
-    </span>
-      :
-      <span onClick={() => this.setState({editing: true})}>
-      {this.props.value}
-        </span>
+      /> : <span onClick={() => this.setState({editingFrom: true})}>{this.props.fromValue}</span>
+      }
+      -
+      {this.state.editingTo ? <Select
+        autofocus={true}
+        className={styles.clickEditInput}
+        onBlur={() => this.setState({editingTo: false})}
+        name="form-field-name"
+        value={toIndex}
+        options={filteredOptions}
+        onChange={nv => this.props.onToChange(nv.label)}
+        matchProp='label'
+        clearable={false}
+      /> : <span onClick={() => this.setState({editingTo: true})}>{this.props.toValue}</span>}
+    </div>
   }
 }
+
+export default onClickOutside(ClickToEditTime)

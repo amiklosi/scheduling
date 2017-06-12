@@ -7,14 +7,8 @@ import {Button} from 'react-toolbox/lib/button';
 import Dialog from 'react-toolbox/lib/dialog';
 import moment from 'moment'
 
-import Select from 'react-select';
-
 // Be sure to include styles at some point, probably during your bootstrapping
 import 'react-select/dist/react-select.css';
-
-
-var options = []
-
 
 class Scheduling extends React.Component {
 
@@ -33,25 +27,6 @@ class Scheduling extends React.Component {
           schedule: [[8, 12], [14, 16]]
         }
       ]
-    }
-    let idx = 0
-    for (let min = 0; min < 60; min += 30) {
-      options.push({value: idx++, label: pad(12) + ':' + pad(min) + ' AM'})
-    }
-
-    for (let i = 1; i < 12; i++) {
-      for (let min = 0; min < 60; min += 30) {
-        options.push({value: idx++, label: pad(i) + ':' + pad(min) + ' AM'})
-      }
-    }
-    for (let min = 0; min < 60; min += 30) {
-      options.push({value: idx++, label: pad(12) + ':' + pad(min) + ' PM'})
-    }
-
-    for (let i = 1; i < 12; i++) {
-      for (let min = 0; min < 60; min += 30) {
-        options.push({value: idx++, label: pad(i) + ':' + pad(min) + ' PM'})
-      }
     }
   }
 
@@ -107,46 +82,11 @@ class Scheduling extends React.Component {
 
   state = {}
 
-  handleFromChange = (val) => {
-    console.log('qq',val)
-    let newToTime = (this.state.toTime && this.state.toTime.value < val.value) ? val : this.state.toTime
-    this.setState({fromTime: val, toTime: newToTime})
-  }
-  handleToChange = (val) => {
-    this.setState({toTime: val})
-  }
-
   render() {
     let dayMap = this.dayMapFromSchedule(this.state.defaultSchedule)
-    let filteredOptions = _.filter(options, o => o.value > (this.state.fromTime || {}).value)
     return <div>
       <h1>My Availability</h1>
       <h2>Available Time</h2>
-      <div style={{width: 80}}>
-        <Select
-          className="mySelect"
-          name="form-field-name"
-          value={this.state.fromTime}
-          options={options}
-          onChange={this.handleFromChange}
-          matchProp='label'
-          clearable={false}
-        />
-
-        to
-
-        <Select
-          name="form-field-name"
-          value={this.state.toTime}
-          options={filteredOptions}
-          onChange={this.handleToChange}
-          matchProp='label'
-          clearable={false}
-        />
-
-
-      </div>
-
       <ul>
         <li>Default Schedule</li>
         {Object.keys(dayMap).map(day =>

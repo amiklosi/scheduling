@@ -2,7 +2,6 @@ import React from 'react'
 import _ from 'lodash'
 import DatePicker from 'react-datepicker'
 import moment from 'moment'
-import TimeInput from 'time-input'
 import 'react-datepicker/dist/react-datepicker-cssmodules.css'
 import EditScheduleGrid from './EditScheduleGrid'
 import {timeToCode} from './date-utils.js'
@@ -58,9 +57,9 @@ export default class AddNewTime extends React.Component {
         <a onClick={() => this.setState({advanced: true, endDate: moment()})}>Use advanced</a>
       </div>
 
-      <TimeInput value={this.state.startTime} onChange={nv => this.setState({startTime: nv})}/>
+      {/*<TimeInput value={this.state.startTime} onChange={nv => this.setState({startTime: nv})}/>*/}
       to
-      <TimeInput value={this.state.endTime} onChange={nv => this.setState({endTime: nv})}/>
+      {/*<TimeInput value={this.state.endTime} onChange={nv => this.setState({endTime: nv})}/>*/}
     </div>
     let advancedView = <div>
       <div>

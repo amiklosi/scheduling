@@ -1,9 +1,10 @@
 import React from 'react'
 import _ from 'lodash'
-import TimeInput from 'time-input'
 import styles from './EditScheduleGrid.scss'
 import {codeToTime, timeToCode, days} from './date-utils'
 import ClickToEditTime from './ClickToEditTime'
+import onClickOutside from 'react-onclickoutside'
+
 
 export default class EditScheduleGrid extends React.Component {
   constructor(props) {
@@ -36,20 +37,27 @@ export default class EditScheduleGrid extends React.Component {
         .map((v, i) => {
             let range = _.find(this.state.selection, s => s == v)
             let updateTime = idx => nv => {
+              console.log('qqq',nv)
               let hour = Number(nv.split(':')[0])
               let mins = Number(nv.split(':')[1])
               hour += mins / 60
 
               range[idx] = timeToCode(nv) + dayIndex * 24
+              if (idx == 0 && range[1] <= range[0]) {
+                range[1] = range[0] + 0.5
+              }
               this.setState({selection: this.state.selection})
               this.props.onUpdate(this.state.selection)
             }
 
             return <div key={i} className={styles.hourInputsHolder}>
-              <ClickToEditTime className={styles.hourInput} value={codeToTime(v[0], dayIndex)} onChange={updateTime(0)}/>
-              -
-              <ClickToEditTime className={styles.hourInput} value={codeToTime(v[1], dayIndex)} onChange={updateTime(0)}/>
-              {/*<TimeInput className={styles.hourInput} value={codeToTime(v[1], dayIndex)} onChange={updateTime(1)}/>*/}
+              <ClickToEditTime
+                className={styles.hourInput}
+                fromValue={codeToTime(v[0], dayIndex)}
+                toValue={codeToTime(v[1], dayIndex)}
+                onFromChange={updateTime(0)}
+                onToChange={updateTime(1)}
+              />
               <span onClick={this.removeRange.bind(this, range)}>x</span>
             </div>
           }

@@ -1,0 +1,18 @@
+.clickEditInput {
+  font-size: 10px;
+  color: #999;
+  display: inline-block;
+  width: 80px;
+
+  :global .Select-control {
+    background-color: #ddd;
+    padding: 0px;
+    border-radius: 0px;
+  }
+}
+
+.topContainer {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 5px;
+}

@@ -1,8 +1,15 @@
+.timeLabel {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
 .clickEditInput {
   font-size: 10px;
   color: #999;
   display: inline-block;
   width: 80px;
+  margin-left: 5px;
+  margin-right: 5px;
 
   :global .Select-control {
     background-color: #ddd;
@@ -13,6 +20,6 @@
 
 .topContainer {
   display: inline-flex;
-  align-items: center;
+  align-items: flex-start;
   margin-right: 5px;
 }

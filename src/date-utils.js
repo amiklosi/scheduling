@@ -1,6 +1,11 @@
 export const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+export const longDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
 export const pad = (n) => n < 10 ? '0' + n : n
+
+export const normalizeCodeToDay = (code, dayIndex) => {
+  return code - 24 * dayIndex
+}
 
 export const codeToTime24 = (code, dayIndex) => {
   let h = Math.floor(code)
@@ -9,6 +14,9 @@ export const codeToTime24 = (code, dayIndex) => {
 }
 
 export const codeToTime = (code, dayIndex) => {
+  if (code === undefined) {
+    return undefined
+  }
   let h = Math.floor(code)
   let m = code == h ? '00' : '30'
   let normalizedH = (h - dayIndex * 24)

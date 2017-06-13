@@ -1,0 +1,53 @@
+.scheduleTable {
+  border-collapse: collapse;
+  th {
+    background-color: #444444;
+  }
+  td {
+    vertical-align: top;
+    min-height: 20px;
+    width: 190px;
+    border-right: 1px solid #777;
+
+    &:hover {
+    }
+
+    &.selected {
+      background-color: #94ff8a;
+    }
+
+    &.rowHeader {
+      width: 100px;
+    }
+  }
+}
+
+.dayLabel {
+  width: 120px;
+}
+
+.row {
+  display: flex;
+  margin-bottom: 5px;
+  align-items: flex-start;
+}
+
+.dayRow {
+  display: flex;
+  align-items: flex-start;
+
+}
+
+.button {
+  cursor: pointer;
+}
+
+
+.hourInput  {
+
+  display: inline-block;
+  input {
+    border: none;
+    width: 55px;
+  }
+}

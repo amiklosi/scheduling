@@ -9,6 +9,7 @@ import moment from 'moment'
 
 // Be sure to include styles at some point, probably during your bootstrapping
 import 'react-select/dist/react-select.css';
+import EditDefaultSchedule from './EditDefaultSchedule'
 
 class Scheduling extends React.Component {
 
@@ -19,7 +20,14 @@ class Scheduling extends React.Component {
     this.state = {
       addingNewTime: false,
       editingDefault: false,
-      defaultSchedule: [[32, 33], [56, 60], [62, 64], [34, 36], [40, 48]],
+      defaultSchedule: [
+        [32, 33],
+        [37, 39],
+        // [56, 60],
+        // [62, 64],
+        // [34, 36],
+        // [40, 48]
+      ],
       customSchedules: [
         {
           fromDate: moment(),
@@ -93,7 +101,8 @@ class Scheduling extends React.Component {
           <div key={day}>
             {day}: {dayMap[day].join(', ')}
           </div>)
-        } <a onClick={this.editDefaultSchedule}>Edit</a>
+        }
+        <a onClick={this.editDefaultSchedule}>Edit</a>
 
         {this.state.customSchedules.map(cs => {
           let dayMap = this.dayMapFromSchedule(cs.schedule)
@@ -115,8 +124,8 @@ class Scheduling extends React.Component {
         <AddNewTime onCancel={() => this.setState({addingNewTime: false})} onAddNew={this.handleAddNewAvailableTime}/>
       </Dialog>
 
-      <Dialog active={this.state.editingDefault} type='large'>
-        <EditScheduleGrid schedule={this.state.defaultSchedule} onUpdate={this.onUpdateSchedule}/>
+      <Dialog active={this.state.editingDefault}>
+        <EditDefaultSchedule schedule={this.state.defaultSchedule} onUpdate={this.onUpdateSchedule}/>
         <Button primary onClick={this.setDefaultSchedule}>Set</Button>
         <Button primary onClick={this.cancelEditingDefaultSchedule}>Cancel</Button>
       </Dialog>

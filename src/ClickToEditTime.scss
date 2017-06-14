@@ -16,6 +16,10 @@
     padding: 0px;
     border-radius: 0px;
   }
+
+  :global .Select-menu-outer {
+    z-index: 999;
+  }
 }
 
 .topContainer {

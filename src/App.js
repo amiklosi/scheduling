@@ -6,10 +6,11 @@ import AddNewTime from "./AddNewTime";
 import {Button} from 'react-toolbox/lib/button';
 import Dialog from 'react-toolbox/lib/dialog';
 import moment from 'moment'
+import styles from './App.scss'
 
 // Be sure to include styles at some point, probably during your bootstrapping
 import 'react-select/dist/react-select.css';
-import EditDefaultSchedule from './EditDefaultSchedule'
+import EditSchedule from './EditSchedule'
 
 class Scheduling extends React.Component {
 
@@ -20,6 +21,7 @@ class Scheduling extends React.Component {
     this.state = {
       addingNewTime: false,
       editingDefault: false,
+      newSchedule: [],
       defaultSchedule: [
         [32, 33],
         [37, 39],
@@ -50,9 +52,23 @@ class Scheduling extends React.Component {
     this.setState({editingDefault: false, savedSchedule: undefined})
   }
 
-  onUpdateSchedule = (newValue) => {
+  onUpdateDefaultSchedule = (newValue) => {
     console.log('sc updated', newValue)
     this.setState({defaultSchedule: newValue})
+  }
+
+  cancelAddingNewSchedule = () => {
+    this.setState({addingNewTime: false, newSchedule: []})
+  }
+
+  addNewSchedule = () => {
+    /// ... add
+    this.setState({addingNewTime: false, newSchedule: []})
+  }
+
+  onUpdateNewSchedule = (newValue) => {
+    console.log('new sc updated', newValue)
+    this.setState({newSchedule: newValue})
 
   }
 
@@ -120,12 +136,12 @@ class Scheduling extends React.Component {
       </ul>
       <span onClick={this.addNewTime}>Add new available time</span>
 
-      <Dialog active={this.state.addingNewTime}>
+      <Dialog active={this.state.addingNewTime} className={styles.editDialog}> 
         <AddNewTime onCancel={() => this.setState({addingNewTime: false})} onAddNew={this.handleAddNewAvailableTime}/>
       </Dialog>
 
-      <Dialog active={this.state.editingDefault}>
-        <EditDefaultSchedule schedule={this.state.defaultSchedule} onUpdate={this.onUpdateSchedule}/>
+      <Dialog active={this.state.editingDefault} className={styles.editDialog}>
+        <EditSchedule schedule={this.state.defaultSchedule} onUpdate={this.onUpdateDefaultSchedule}/>
         <Button primary onClick={this.setDefaultSchedule}>Set</Button>
         <Button primary onClick={this.cancelEditingDefaultSchedule}>Cancel</Button>
       </Dialog>

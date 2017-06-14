@@ -1,11 +1,11 @@
 import React from 'react'
 import _ from 'lodash'
-import styles from './EditDefaultSchedule.scss'
-import {codeToTime, timeToCode, normalizeCodeToDay, days, longDays} from './date-utils'
+import styles from './EditSchedule.scss'
+import {codeToTime, timeToCode, normalizeCodeToDay, days, longDays, mondayBasedlongDays} from './date-utils'
 import ClickToEditTime from './ClickToEditTime'
 import FontIcon from 'react-toolbox/lib/font_icon'
 
-export default class EditDefaultSchedule extends React.Component {
+export default class EditSchedule extends React.Component {
   constructor(props) {
     super(props)
     this.state = {qq: '12:00', selection: _.clone(props.schedule)}
@@ -60,12 +60,12 @@ export default class EditDefaultSchedule extends React.Component {
         .sortBy([v => v[0]])
         .map((v, i, filteredList) => {
             let range = _.find(this.state.selection, s => s == v)
-          let existingRangesForDay = _(this.state.selection)
-            .filter(s => s.length == 2 && Math.floor(s[0] / 24) == dayIndex && s != range)
-            .map(ranges => ranges.map(rangeValue => rangeValue - dayIndex * 24))
-            .value()
+            let existingRangesForDay = _(this.state.selection)
+              .filter(s => s.length == 2 && Math.floor(s[0] / 24) == dayIndex && s != range)
+              .map(ranges => ranges.map(rangeValue => rangeValue - dayIndex * 24))
+              .value()
 
-          return <div key={i} className={styles.dayRow}>
+            return <div key={i} className={styles.dayRow}>
               <ClickToEditTime
                 className={styles.hourInput}
                 fromValue={normalizeCodeToDay(v[0], dayIndex)}
@@ -76,7 +76,8 @@ export default class EditDefaultSchedule extends React.Component {
               />
               <FontIcon className={styles.button} value='delete' onClick={this.removeRange.bind(this, range)}/>
               {this.state.addingNewForDay !== dayIndex && i == filteredList.length - 1 &&
-              <FontIcon className={styles.button} value='add' onClick={() => this.setState({addingNewForDay: dayIndex})}/>}
+              <FontIcon className={styles.button} value='add'
+                        onClick={() => this.setState({addingNewForDay: dayIndex})}/>}
 
             </div>
           }
@@ -107,11 +108,13 @@ export default class EditDefaultSchedule extends React.Component {
       </div>
     }
     let table = <div className={styles.scheduleTable}>
-      {longDays.map((day, idx) =>
-        <div key={idx} className={styles.row}>
+      {mondayBasedlongDays.map(day => {
+        let idx = _.indexOf(longDays, day)
+        return <div key={idx} className={styles.row}>
           <div className={styles.dayLabel}>{day}s</div>
           {entryRow(idx)}
-        </div>)
+        </div>
+      })
       }
 
     </div>

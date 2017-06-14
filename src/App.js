@@ -41,20 +41,31 @@ class Scheduling extends React.Component {
   }
 
   editDefaultSchedule = () => {
-    this.setState({editingDefault: true, savedSchedule: _.cloneDeep(this.state.defaultSchedule)})
+    this.setState({
+      editing: true, 
+      editingDefault: true,
+      selectedSchedule: this.state.defaultSchedule,
+      savedSchedule: _.cloneDeep(this.state.defaultSchedule)
+    })
   }
 
-  cancelEditingDefaultSchedule = () => {
-    this.setState({editingDefault: false, defaultSchedule: this.state.savedSchedule})
+  cancelEditingSchedule = () => {
+    if (this.state.editingDefault) {
+      this.setState({editing: false, defaultSchedule: this.state.savedSchedule, editingDefault: false})
+    }
   }
 
-  setDefaultSchedule = () => {
-    this.setState({editingDefault: false, savedSchedule: undefined})
+  setSchedule = () => {
+    this.setState({editing: false, editingDefault: false, savedSchedule: undefined})
   }
 
-  onUpdateDefaultSchedule = (newValue) => {
+  onUpdateSelectedSchedule = (newValue) => {
+    
     console.log('sc updated', newValue)
-    this.setState({defaultSchedule: newValue})
+    
+    if (this.state.editingDefault) {
+      this.setState({defaultSchedule: newValue})
+    }    
   }
 
   cancelAddingNewSchedule = () => {
@@ -140,10 +151,10 @@ class Scheduling extends React.Component {
         <AddNewTime onCancel={() => this.setState({addingNewTime: false})} onAddNew={this.handleAddNewAvailableTime}/>
       </Dialog>
 
-      <Dialog active={this.state.editingDefault} className={styles.editDialog}>
-        <EditSchedule schedule={this.state.defaultSchedule} onUpdate={this.onUpdateDefaultSchedule}/>
-        <Button primary onClick={this.setDefaultSchedule}>Set</Button>
-        <Button primary onClick={this.cancelEditingDefaultSchedule}>Cancel</Button>
+      <Dialog active={this.state.editing} className={styles.editDialog}>
+        <EditSchedule schedule={this.state.selectedSchedule} onUpdate={this.onUpdateSelectedSchedule}/>
+        <Button primary onClick={this.setSchedule}>Set</Button>
+        <Button primary onClick={this.cancelEditingSchedule}>Cancel</Button>
       </Dialog>
 
       <h2>Blocked Time</h2>

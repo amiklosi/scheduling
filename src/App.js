@@ -1,6 +1,5 @@
 import React from 'react'
 import _ from 'lodash'
-import EditScheduleGrid from './EditScheduleGrid'
 import {
   codeToTime,
   pad,
@@ -21,231 +20,129 @@ import EditSchedule from './EditSchedule'
 
 class Scheduling extends React.Component {
 
-    static propTypes = {}
+  static propTypes = {}
 
-    constructor(props) {
-      super(props)
-      this.state = {
-        addingNewTime: false,
-        editingDefault: false,
-        newSchedule: [],
-
-        schedules: [{
-            //default
-            schedule: [
-              [32, 33],
-              [37, 39],
-            ]
-          },
-          {
-            fromDate: moment(),
-            toDate: moment(),
-            schedule: [
-              [8, 12],
-              [14, 16]
-            ]
-          }
-        ]
-      }
+  constructor(props) {
+    super(props)
+    this.state = {
+      editing: false,
+      schedules: [
+        {
+          //default
+          schedule: [
+            [32, 33],
+            [37, 39],
+          ]
+        },
+        {
+          fromDate: moment(),
+          toDate: moment(),
+          schedule: [
+            [8, 12],
+            [14, 16]
+          ]
+        }
+      ]
     }
+  }
 
-    editSchedule = (schedule) => {
-      this.setState({
-        editing: true,
-        selectedSchedule: schedule,
-        savedSchedule: _.cloneDeep(schedule)
-      })
-    }
+  editSchedule = (scheduleIndex) => {
+    this.setState({
+      editing: true,
+      selectedScheduleIndex: scheduleIndex,
+      savedSchedules: _.cloneDeep(this.state.schedules)
+    })
+  }
 
-    cancelEditingSchedule = () => {
-      let existingSchedule = _.findIndex(this.state.schedules, s => s == this.state.selectedSchedule)
-      this.setState({
-        editing: false,
-        defaultSchedule: this.state.savedSchedule,
-        editingDefault: false
-      })
-    }
+  cancelEditingSchedule = () => {
+    this.setState({
+      editing: false,
+      schedules: this.state.savedSchedules
+    })
+  }
 
-    setSchedule = () => {
-      this.setState({
-        editing: false,
-        editingDefault: false,
-        savedSchedule: undefined
-      })
-    }
+  setSchedule = () => {
+    this.setState({
+      editing: false,
+      savedSchedule: undefined
+    })
+  }
 
-    onUpdateSelectedSchedule = (newValue) => {
+  onUpdateSelectedSchedule = (newValue) => {
+    console.log('sc updated', newValue)
+    Object.keys(newValue).forEach(key => this.state.schedules[this.state.selectedScheduleIndex][key] = newValue[key])
+    this.setState({schedules: this.state.schedules})
+  }
 
-      console.log('sc updated', newValue)
+  addNewTime = () => {
+    let savedSchedules = _.cloneDeep(this.state.schedules)
+    this.state.schedules.push({fromDate: moment(), toDate: moment(), schedule: []})
+    this.setState({
+      editing: true,
+      selectedScheduleIndex: this.state.schedules.length - 1,
+      savedSchedules: savedSchedules
+    })
+  }
 
-      if (this.state.editingDefault) {
-        this.setState({
-          defaultSchedule: newValue
+  removeSchedule = (schedule) => {
+    this.state.schedules = _.reject(this.state.schedules, s => s == schedule)
+    this.setState({})
+  }
+
+  dayMapFromSchedule = (schedule) => {
+    let dayMap = {}
+    _.each(schedule, (range) => {
+      let day = Math.floor(range[0] / 24)
+      dayMap[days[day]] = dayMap[days[day]] || []
+      dayMap[days[day]].push(codeToTime(range[0], day) + ' - ' + codeToTime(range[1], day))
+    })
+    return dayMap
+  }
+
+  render() {
+    let dayMap = this.dayMapFromSchedule(this.state.schedules[0].schedule)
+    return <div>
+      <h1>My Availability</h1>
+      <h2>Available Time</h2>
+      <ul>
+        <li>Default Schedule</li>
+        {Object.keys(dayMap).map(day =>
+          <div key={day}>
+            {day}: {dayMap[day].join(', ')}
+          </div>)
+        }
+        <Button inverse onClick={this.editSchedule.bind(this, 0)}>Edit</Button>
+
+        {_.tail(this.state.schedules).map((cs, idx) => {
+          let dayMap = this.dayMapFromSchedule(cs.schedule)
+          return <li>
+            Except {cs.fromDate.format('MMMM Do YYYY')} - {cs.toDate.format('MMMM Do YYYY')}
+            {Object.keys(dayMap).map(day =>
+              <div key={day}>
+                {day}: {dayMap[day].join(', ')}
+              </div>)
+            }
+            <Button inverse onClick={this.editSchedule.bind(this, idx + 1)}>Edit</Button>
+            <Button inverse onClick={this.removeSchedule.bind(this, cs)}>X</Button>
+          </li>
         })
-      }
-    }
-
-    cancelAddingNewSchedule = () => {
-      this.setState({
-        addingNewTime: false,
-        newSchedule: []
-      })
-    }
-
-    addNewSchedule = () => {
-      /// ... add
-      this.setState({
-        addingNewTime: false,
-        newSchedule: []
-      })
-    }
-
-    onUpdateNewSchedule = (newValue) => {
-      console.log('new sc updated', newValue)
-      this.setState({
-        newSchedule: newValue
-      })
-
-    }
-
-    addNewTime = () => {
-      this.setState({
-        addingNewTime: true
-      })
-    }
-
-    handleAddNewAvailableTime = (fromDate, toDate, ranges) => {
-      toDate = toDate || fromDate
-      console.log('adding new avail', fromDate.format(), toDate.format(), ranges)
-      this.state.customSchedules.push({
-        fromDate,
-        toDate,
-        schedule: ranges
-      })
-      this.setState({
-        addingNewTime: false
-      })
-    }
-
-    removeCustomSchedule = (customSchedule) => {
-      this.state.customSchedules = _.reject(this.state.customSchedules, s => s == customSchedule)
-      this.setState({})
-    }
-
-    dayMapFromSchedule = (schedule) => {
-      let dayMap = {}
-      _.each(schedule, (range) => {
-        let day = Math.floor(range[0] / 24)
-        dayMap[days[day]] = dayMap[days[day]] || []
-        dayMap[days[day]].push(codeToTime(range[0], day) + ' - ' + codeToTime(range[1], day))
-      })
-      return dayMap
-    }
-
-    state = {}
-
-    render() {
-      let dayMap = this.dayMapFromSchedule(this.state.defaultSchedule)
-      return <div >
-        <
-        h1 > My Availability < /h1> <
-      h2 > Available Time < /h2> <
-      ul >
-        <
-        li > Default Schedule < /li> {
-      Object.keys(dayMap).map(day =>
-          <
-          div key = {
-            day
-          } > {
-            day
-          }: {
-            dayMap[day].join(', ')
-          } <
-          /div>)
-        } <
-        a onClick = {
-          this.editDefaultSchedule
-        } > Edit < /a>
-
-      {
-        this.state.customSchedules.map(cs => {
-              let dayMap = this.dayMapFromSchedule(cs.schedule)
-              return <li >
-                Except {
-                  cs.fromDate.format('MMMM Do YYYY')
-                } - {
-                  cs.toDate.format('MMMM Do YYYY')
-                } {
-                  Object.keys(dayMap).map(day =>
-                      <
-                      div key = {
-                        day
-                      } > {
-                        day
-                      }: {
-                        dayMap[day].join(', ')
-                      } <
-                      /div>)
-                    } <
-                    Button inverse onClick = {
-                      this.removeCustomSchedule.bind(this, cs)
-                    } > X < /Button> < /
-                  li >
-                })
-          } <
-          /ul> <
-        span onClick = {
-            this.addNewTime
-          } > Add new available time < /span>
-
-          <
-          Dialog active = {
-            this.state.addingNewTime
-          }
-        className = {
-            styles.editDialog
-          } >
-          <
-          AddNewTime onCancel = {
-            () => this.setState({
-              addingNewTime: false
-            })
-          }
-        onAddNew = {
-          this.handleAddNewAvailableTime
         }
-        /> < /
-        Dialog >
+      </ul>
+      <span onClick={this.addNewTime}>Add new available time</span>
 
-          <
-          Dialog active = {
-            this.state.editing
-          }
-        className = {
-            styles.editDialog
-          } >
-          <
-          EditSchedule schedule = {
-            this.state.selectedSchedule
-          }
-        onUpdate = {
-          this.onUpdateSelectedSchedule
-        }
-        /> <
-        Button primary onClick = {
-          this.setSchedule
-        } > Set < /Button> <
-        Button primary onClick = {
-          this.cancelEditingSchedule
-        } > Cancel < /Button> < /
-        Dialog >
+      <Dialog active={this.state.editing} className={styles.editDialog}>
+        <EditSchedule
+          hasDateRangeSelector={this.state.selectedScheduleIndex > 0}
+          schedule={this.state.schedules[this.state.selectedScheduleIndex]}
+          onUpdate={this.onUpdateSelectedSchedule}
+        />
+        <Button primary onClick={this.setSchedule}>Set</Button>
+        <Button primary onClick={this.cancelEditingSchedule}>Cancel</Button>
+      </Dialog>
 
-          <
-          h2 > Blocked Time < /h2> < /
-        div >
-      }
-    }
+      <h2>Blocked Time</h2>
+    </div>
+  }
+}
 
-
-    export default Scheduling
+export default Scheduling

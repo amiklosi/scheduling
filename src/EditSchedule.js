@@ -4,26 +4,34 @@ import styles from './EditSchedule.scss'
 import {codeToTime, timeToCode, normalizeCodeToDay, days, longDays, mondayBasedlongDays} from './date-utils'
 import ClickToEditTime from './ClickToEditTime'
 import FontIcon from 'react-toolbox/lib/font_icon'
+import DatePicker from 'react-datepicker'
 
 export default class EditSchedule extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {qq: '12:00', selection: _.clone(props.schedule)}
+    this.state = {fromDate: props.schedule.fromDate, toDate: props.schedule.toDate, selection: _.clone(props.schedule.schedule)}
   }
 
   removeRange = (range) => {
     this.state.selection = _.reject(this.state.selection, s => s == range)
     this.setState({selection: this.state.selection})
-    this.props.onUpdate(this.state.selection)
+    this.props.onUpdate({schedule: this.state.selection})
   }
 
-  addNewRange(day) {
-    let dayIndex = _.indexOf(days, day)
-    let utc = dayIndex * 24
-    this.state.selection.push([utc, utc])
-    this.setState({})
-    this.props.onUpdate(this.state.selection)
+  handleFromDateChange = (date) => {
+    this.setState({
+      fromDate: date
+    })
+    this.props.onUpdate({fromDate: date})
   }
+
+  handleToDateChange = (date) => {
+    this.setState({
+      toDate: date
+    })
+    this.props.onUpdate({toDate: date})
+  }
+
 
   render() {
 
@@ -33,7 +41,7 @@ export default class EditSchedule extends React.Component {
         range[1] = range[0] + 0.5
       }
       this.setState({selection: this.state.selection})
-      this.props.onUpdate(this.state.selection)
+      this.props.onUpdate({schedule: this.state.selection})
     }
 
     let addOrUpdateTime = (dayIndex, rangeIdx, nv) => {
@@ -118,6 +126,22 @@ export default class EditSchedule extends React.Component {
       }
 
     </div>
-    return <div>{table} {JSON.stringify(this.state.selection)}</div>
+    return <div>
+      {this.props.hasDateRangeSelector && <div>
+        From:
+        <DatePicker
+          selected={this.state.fromDate}
+          onChange={this.handleFromDateChange}
+        />
+
+        To:
+        <DatePicker
+          selected={this.state.toDate}
+          onChange={this.handleToDateChange}
+        />
+      </div>}
+      {table}
+      {JSON.stringify(this.state.selection)}
+    </div>
   }
 }

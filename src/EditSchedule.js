@@ -45,7 +45,6 @@ export default class EditSchedule extends React.Component {
   }
 
   render() {
-
     let updateTime = (dayIndex, range, rangeIdx, nv) => {
       range[rangeIdx] = nv + dayIndex * 24
       if (rangeIdx == 0 && range[1] <= range[0]) {

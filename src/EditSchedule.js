@@ -42,9 +42,7 @@ export default class EditSchedule extends React.Component {
       })
       this.props.onUpdate({fromDate: date})
     }
-
   }
-
 
   render() {
 

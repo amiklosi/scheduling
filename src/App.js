@@ -6,7 +6,6 @@ import {
   timeToCode,
   days
 } from './date-utils'
-import AddNewTime from "./AddNewTime";
 import {
   Button
 } from 'react-toolbox/lib/button';
@@ -16,6 +15,8 @@ import styles from './App.scss'
 
 // Be sure to include styles at some point, probably during your bootstrapping
 import 'react-select/dist/react-select.css';
+import 'react-datepicker/dist/react-datepicker-cssmodules.css'
+
 import EditSchedule from './EditSchedule'
 
 class Scheduling extends React.Component {
@@ -115,7 +116,7 @@ class Scheduling extends React.Component {
 
         {_.tail(this.state.schedules).map((cs, idx) => {
           let dayMap = this.dayMapFromSchedule(cs.schedule)
-          return <li>
+          return <li key={idx}>
             Except {cs.fromDate.format('MMMM Do YYYY')} - {cs.toDate.format('MMMM Do YYYY')}
             {Object.keys(dayMap).map(day =>
               <div key={day}>

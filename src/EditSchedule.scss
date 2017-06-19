@@ -24,12 +24,19 @@
 
 .dayLabel {
   width: 120px;
+  font-weight: bold;
 }
 
 .row {
-  display: flex;
+  //display: flex;
   margin-bottom: 5px;
   align-items: flex-start;
+  background: #ddd;
+  color: #333;
+  padding: 5px 10px;
+  border-radius: 10px;
+  max-width: 500px;
+
 }
 
 .dayRow {
@@ -50,4 +57,16 @@
     border: none;
     width: 55px;
   }
+}
+
+.dateRangeSelectionContainer {
+  margin-bottom: 10px;
+}
+
+.datePicker {
+  border: 1px solid black;
+  border-radius: 3px;
+  padding: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
 }

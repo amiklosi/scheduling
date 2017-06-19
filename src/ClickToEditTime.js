@@ -37,10 +37,10 @@ class ClickToEditTime extends React.Component {
     }
     let label = option.label
     let filterTimePart = (filter.match(/[0-9:]+/) || [''])[0]
-    let [filterH, filterM] = filterTimePart.split(':').map(v=>_.isEmpty(v) ? undefined : Number(v))
+    let [filterH, filterM] = filterTimePart.split(':').map(v => _.isEmpty(v) ? undefined : Number(v))
     let filterAmPmPart = (filter.toLowerCase().match(/[ap]/) || [''])[0]
     let optionTimePart = (label.match(/[0-9:]+/) || [''])[0]
-    let [optionH, optionM] = optionTimePart.split(':').map(v=>_.isEmpty(v) ? undefined : Number(v))
+    let [optionH, optionM] = optionTimePart.split(':').map(v => _.isEmpty(v) ? undefined : Number(v))
     let optionAmPmPart = (label.toLowerCase().match(/[ap]/) || [''])[0]
     return (filterH == optionH)
       && (filterAmPmPart == '' || filterAmPmPart == optionAmPmPart)
@@ -84,6 +84,13 @@ class ClickToEditTime extends React.Component {
     this.setState({editingTo: false})
   }
 
+  scrollRefTo9AM = (ref) => {
+    setTimeout(() => {
+      ref.menu.scrollTop = 530
+    }, 10)
+  }
+
+  scrollFromTo9AM = () => this.scrollRefTo9AM(this.selectFromRef)
 
   render() {
 
@@ -96,12 +103,14 @@ class ClickToEditTime extends React.Component {
     return <div className={styles.topContainer}>
 
       <div>
-      from
+        from
       </div>
 
       {this.state.editingFrom ? <Select
         autofocus={this.props.autoFocusFrom}
         className={styles.clickEditInput}
+        ref={r => this.selectFromRef = r}
+        onOpen={this.scrollFromTo9AM}
         filterOption={this.filterOption}
         name="form-field-name"
         value={fromIndex}
@@ -109,13 +118,13 @@ class ClickToEditTime extends React.Component {
         onChange={this.handleFromChange}
         matchProp='label'
         clearable={false}
-      /> : <div className={styles.timeLabel} onClick={() => this.setState({editingFrom: true})}>{codeToTime(this.props.fromValue, 0)}</div>
+      /> : <div className={styles.timeLabel}
+                onClick={() => this.setState({editingFrom: true})}>{codeToTime(this.props.fromValue, 0)}</div>
       }
       <div>
         to
       </div>
       {this.state.editingTo ? <Select
-        autofocus={!this.props.isDefault}
         className={styles.clickEditInput}
         filterOption={this.filterOption}
         name="form-field-name"
@@ -124,7 +133,8 @@ class ClickToEditTime extends React.Component {
         onChange={this.handleToChange}
         matchProp='label'
         clearable={false}
-      /> : <div className={styles.timeLabel} onClick={() => this.setState({editingTo: true})}>{codeToTime(this.props.toValue, 0)}</div>}
+      /> : <div className={styles.timeLabel}
+                onClick={() => this.setState({editingTo: true})}>{codeToTime(this.props.toValue, 0)}</div>}
 
 
       {!!toCode && <div>

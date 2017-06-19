@@ -23,6 +23,12 @@ export default class EditSchedule extends React.Component {
       fromDate: date
     })
     this.props.onUpdate({fromDate: date})
+    if (this.state.toDate.isBefore(date)) {
+      this.setState({
+        toDate: date
+      })
+      this.props.onUpdate({toDate: date})
+    }
   }
 
   handleToDateChange = (date) => {
@@ -30,6 +36,13 @@ export default class EditSchedule extends React.Component {
       toDate: date
     })
     this.props.onUpdate({toDate: date})
+    if (date.isBefore(this.state.fromDate)) {
+      this.setState({
+        fromDate: date
+      })
+      this.props.onUpdate({fromDate: date})
+    }
+
   }
 
 
@@ -127,15 +140,17 @@ export default class EditSchedule extends React.Component {
 
     </div>
     return <div>
-      {this.props.hasDateRangeSelector && <div>
+      {this.props.hasDateRangeSelector && <div className={styles.dateRangeSelectionContainer}>
         From:
         <DatePicker
+          className={styles.datePicker}
           selected={this.state.fromDate}
           onChange={this.handleFromDateChange}
         />
 
         To:
         <DatePicker
+          className={styles.datePicker}
           selected={this.state.toDate}
           onChange={this.handleToDateChange}
         />

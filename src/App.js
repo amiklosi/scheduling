@@ -18,7 +18,15 @@ import 'react-select/dist/react-select.css';
 import 'react-datepicker/dist/react-datepicker-cssmodules.css'
 
 import EditSchedule from './EditSchedule'
+import {getAllAvailability} from './schedulingApi'
+import Input from 'react-toolbox/lib/input'
 
+const mapTimeZone = (arr) => {
+
+  let offset = new Date().getTimezoneOffset() / 60
+  console.log('q',offset)
+  return arr.map(time => time - offset)
+}
 class Scheduling extends React.Component {
 
   static propTypes = {}
@@ -27,6 +35,7 @@ class Scheduling extends React.Component {
     super(props)
     this.state = {
       editing: false,
+      uid: '',
       schedules: [
         {
           //default
@@ -45,6 +54,24 @@ class Scheduling extends React.Component {
         }
       ]
     }
+  }
+
+
+  componentDidMount() {
+    getAllAvailability('-KnKKk9AC3Ea08CBuUlo').then(availability => {
+      console.log(availability)
+      this.setState({schedules: availability.schedules.map(s => {
+        let range = s.exception_range ? JSON.parse(s.exception_range).map(t => moment(t)) : undefined
+        console.log(range)
+        let availability = s.availability.map(a => mapTimeZone(JSON.parse(a)))
+        console.log(availability)
+        return {
+          schedule: availability,
+          fromDate: range ? range[0] : undefined,
+          toDate: range ? range[1] : undefined
+        }
+      })})
+    })
   }
 
   editSchedule = (scheduleIndex) => {
@@ -100,11 +127,19 @@ class Scheduling extends React.Component {
     return dayMap
   }
 
+  handleUidChange = (value) => {
+    this.setState({uid: value});
+  }
+
   render() {
     let dayMap = this.dayMapFromSchedule(this.state.schedules[0].schedule)
     return <div>
+      <div style={{background: '#ddd'}}>
+      <Input type='text' label='UserId' name='uid' value={this.state.uid} onChange={this.handleUidChange} />
+      </div>
       <h1>My Availability</h1>
       <h2>Available Time</h2>
+      {JSON.stringify(this.state.availability)}
       <ul>
         <li>Default Schedule</li>
         {Object.keys(dayMap).map(day =>

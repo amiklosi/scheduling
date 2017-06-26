@@ -177,6 +177,16 @@ class Scheduling extends React.Component {
     })
   }
 
+  addDefaultSchedule = () => {
+    this.state.schedules.push({schedule: []})
+    this.setState({
+      editing: true,
+      selectedScheduleIndex: 0,
+      savedSchedules: []
+    })
+
+  }
+
   removeSchedule = (schedule) => {
     let id = schedule.id
     console.log('removing', id)
@@ -198,7 +208,8 @@ class Scheduling extends React.Component {
   }
 
   render() {
-    let dayMap = dayMapFromSchedule(this.state.schedules[0].schedule)
+    let hasDefault = this.state.schedules.length > 0
+    let dayMap = hasDefault && dayMapFromSchedule(this.state.schedules[0].schedule)
     return <div>
       <div style={{background: '#ddd'}}>
         <Input type='text' label='UserId' name='uid' value={this.state.uid} onChange={this.handleUidChange}/>
@@ -208,19 +219,22 @@ class Scheduling extends React.Component {
       {JSON.stringify(this.state.availability)}
       <ul>
         <li>Default Schedule</li>
-        {Object.keys(dayMap).map(day =>
-          <div key={day}>
-            {day}: {dayMap[day].join(', ')}
-          </div>)
-        }
-        <Button inverse onClick={this.editSchedule.bind(this, this.state.schedules[0])}>Edit</Button>
+        {hasDefault && <div>
+          {Object.keys(dayMap).map(day =>
+            <div key={day}>
+              {day}: {dayMap[day].join(', ')}
+            </div>)
+          }
+          <Button inverse onClick={this.editSchedule.bind(this, this.state.schedules[0])}>Edit</Button>
+        </div>}
 
         {_.tail(this.state.schedules)
           .filter(cs => !cs.isBlocked)
           .map((cs, idx) => <ScheduleRow key={idx} cs={cs} editSchedule={this.editSchedule}
                                          removeSchedule={this.removeSchedule}/>)}
       </ul>
-      <span onClick={this.addNewTime}>Add new available time</span>
+      {hasDefault && <span onClick={this.addNewTime}>Add new available time</span>}
+      {!hasDefault && <span onClick={this.addDefaultSchedule}>Set up default schedule</span>}
 
       <Dialog active={this.state.editing} className={styles.editDialog}>
         <EditSchedule
@@ -232,7 +246,7 @@ class Scheduling extends React.Component {
         <Button primary onClick={this.cancelEditingSchedule}>Cancel</Button>
       </Dialog>
 
-      <h2>Blocked Time</h2>
+      {hasDefault && <div><h2>Blocked Time</h2>
       <ul>
         {_.tail(this.state.schedules)
           .filter(cs => cs.isBlocked)
@@ -240,6 +254,7 @@ class Scheduling extends React.Component {
                                          removeSchedule={this.removeSchedule}/>)}
       </ul>
       <span onClick={this.addNewBlockedTime}>Add new blocked time</span>
+      </div>}
     </div>
   }
 }

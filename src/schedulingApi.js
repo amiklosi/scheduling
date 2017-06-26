@@ -25,8 +25,8 @@ export const schedulingApi = (userId) => {
         },
         method: "POST",
         body: JSON.stringify({
-          begin,
-          end,
+          begin: begin,
+          end: end,
           availability,
           isBlocked
         })
@@ -41,8 +41,8 @@ export const schedulingApi = (userId) => {
         },
         method: "POST",
         body: JSON.stringify({
-          begin,
-          end,
+          begin: begin,
+          end: end,
           availability
         })
       })

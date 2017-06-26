@@ -139,12 +139,14 @@ class Scheduling extends React.Component {
       this.cancelEditingSchedule()
     })
 
+    let fromDate = schedule.fromDate && schedule.fromDate.format('YYYY-MM-DD')
+    let toDate = schedule.toDate && schedule.toDate.format('YYYY-MM-DD[T23:59]')
     if (schedule.id) {
       console.log("updating", schedule)
-      updateStateOrCancel(this.schedulingApi.updateAvailability(schedule.id, schedule.fromDate.format('YYYY-MM-DD'), schedule.toDate.format('YYYY-MM-DD[T23:59]'), utcSchedule, schedule.isBlocked))
+      updateStateOrCancel(this.schedulingApi.updateAvailability(schedule.id, fromDate, toDate, utcSchedule, schedule.isBlocked))
     } else {
       console.log("creating new", schedule)
-      updateStateOrCancel(this.schedulingApi.addNewAvailability(schedule.fromDate.format('YYYY-MM-DD'), schedule.toDate.format('YYYY-MM-DD[T23:59]'), utcSchedule, schedule.isBlocked))
+      updateStateOrCancel(this.schedulingApi.addNewAvailability(fromDate, toDate, utcSchedule, schedule.isBlocked))
     }
 
   }

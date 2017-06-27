@@ -6,20 +6,19 @@ import {
   timeToCode,
   days
 } from './date-utils'
-import {
-  Button
-} from 'react-toolbox/lib/button';
-import Dialog from 'react-toolbox/lib/dialog';
+import Dialog from 'react-toolbox/lib/dialog'
 import moment from 'moment'
 import styles from './App.scss'
 
 // Be sure to include styles at some point, probably during your bootstrapping
-import 'react-select/dist/react-select.css';
+import 'react-select/dist/react-select.css'
 import 'react-datepicker/dist/react-datepicker-cssmodules.css'
 
 import EditSchedule from './EditSchedule'
 import {schedulingApi} from './schedulingApi'
 import Input from 'react-toolbox/lib/input'
+import {Button} from 'react-toolbox/lib/button'
+
 
 const dayMapFromSchedule = (schedule) => {
   let dayMap = {}
@@ -64,7 +63,12 @@ class Scheduling extends React.Component {
     super(props)
     this.state = {
       editing: false,
-      uid: '',
+      // uid: '-EbuNpiIu4Y-iEiGzazU',
+      uid: '-KnYNpiIu4Y-iEiGzazU',
+      // // remote
+      // uid: '-KlkMya8T6Fr4a7_ZDvp',
+      host: 'http://localhost:5002/smashcut-a23d2/us-central1/schedule',
+      // host: 'https://us-central1-smashcut-a23d2.cloudfunctions.net/schedule',
       schedules: [
         {
           //default
@@ -84,11 +88,10 @@ class Scheduling extends React.Component {
       ]
     }
 
-    this.schedulingApi = schedulingApi('-KnKKk9AC3Ea08CBuUlo')
+    this.schedulingApi = schedulingApi(this.state.host, this.state.uid)
   }
 
-
-  componentDidMount() {
+  loadAvailability = () => {
     this.schedulingApi.getAllAvailability().then(availability => {
       console.log(availability)
       this.setState({
@@ -106,6 +109,10 @@ class Scheduling extends React.Component {
         })
       })
     })
+  }
+
+  componentDidMount() {
+    this.loadAvailability()
   }
 
   editSchedule = (schedule) => {
@@ -191,7 +198,7 @@ class Scheduling extends React.Component {
     let id = schedule.id
     console.log('removing', id)
     this.schedulingApi.deleteAvailability(id)
-      .then(()=> {
+      .then(() => {
         console.log('removed success')
         this.state.schedules = _.reject(this.state.schedules, s => s == schedule)
         this.setState({})
@@ -203,16 +210,31 @@ class Scheduling extends React.Component {
   }
 
   handleUidChange = (value) => {
-    console.log('uid', value)
-    this.setState({uid: value});
+    this.setState({uid: value})
+  }
+
+  handleHostChange = (value) => {
+    this.setState({host: value})
+  }
+
+
+  reloadSchedule = () => {
+    this.schedulingApi = schedulingApi(this.state.host, this.state.uid)
+    this.loadAvailability()
   }
 
   render() {
     let hasDefault = this.state.schedules.length > 0
     let dayMap = hasDefault && dayMapFromSchedule(this.state.schedules[0].schedule)
     return <div>
-      <div style={{background: '#ddd'}}>
-        <Input type='text' label='UserId' name='uid' value={this.state.uid} onChange={this.handleUidChange}/>
+      <div style={{width: 500}}>
+        <div style={{background: '#eee'}}>
+          <Input type='text' label='Host' name='host' value={this.state.host} onChange={this.handleHostChange}/>
+        </div>
+        <div style={{background: '#eee'}}>
+          <Input type='text' label='UserId' name='uid' value={this.state.uid} onChange={this.handleUidChange}/>
+        </div>
+        <Button icon='bookmark' label='Refresh' accent onClick={this.reloadSchedule} />
       </div>
       <h1>My Availability</h1>
       <h2>Available Time</h2>
@@ -247,13 +269,13 @@ class Scheduling extends React.Component {
       </Dialog>
 
       {hasDefault && <div><h2>Blocked Time</h2>
-      <ul>
-        {_.tail(this.state.schedules)
-          .filter(cs => cs.isBlocked)
-          .map((cs, idx) => <ScheduleRow key={idx} cs={cs} editSchedule={this.editSchedule}
-                                         removeSchedule={this.removeSchedule}/>)}
-      </ul>
-      <span onClick={this.addNewBlockedTime}>Add new blocked time</span>
+        <ul>
+          {_.tail(this.state.schedules)
+            .filter(cs => cs.isBlocked)
+            .map((cs, idx) => <ScheduleRow key={idx} cs={cs} editSchedule={this.editSchedule}
+                                           removeSchedule={this.removeSchedule}/>)}
+        </ul>
+        <span onClick={this.addNewBlockedTime}>Add new blocked time</span>
       </div>}
     </div>
   }

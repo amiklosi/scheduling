@@ -90,7 +90,7 @@ class ClickToEditTime extends React.Component {
     }, 10)
   }
 
-  scrollFromTo9AM = () => this.scrollRefTo9AM(this.selectFromRef)
+  scrollFromTo9AM = () => !this.props.fromValue && this.scrollRefTo9AM(this.selectFromRef)
 
   render() {
 

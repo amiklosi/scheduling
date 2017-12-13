@@ -64,11 +64,11 @@ class Scheduling extends React.Component {
     this.state = {
       editing: false,
       // uid: '-EbuNpiIu4Y-iEiGzazU',
-      uid: '-KnYNpiIu4Y-iEiGzazU',
+      // uid: '-KnYNpiIu4Y-iEiGzazU',
       // // remote
-      // uid: '-KlkMya8T6Fr4a7_ZDvp',
-      host: 'http://localhost:5002/smashcut-a23d2/us-central1/schedule',
-      // host: 'https://us-central1-smashcut-a23d2.cloudfunctions.net/schedule',
+      uid: '-KlkMya8T6Fr4a7_ZDvp',
+      // host: 'http://localhost:5002/smashcut-a23d2/us-central1/schedule',
+      host: 'https://us-central1-smashcut-a23d2.cloudfunctions.net/schedule',
       schedules: [
         {
           //default

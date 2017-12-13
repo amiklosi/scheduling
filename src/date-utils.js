@@ -1,4 +1,5 @@
 export const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+export const mondayBasedDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 export const longDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 export const mondayBasedlongDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
@@ -38,4 +39,24 @@ export const timeToCode = (time) => {
   } else {
     return h + m / 60
   }
+}
+
+export const isAvailable = (timeCode, availability) => {
+  for (let i = 0; i < availability.length; i++) {
+    const range = availability[i]
+    if (timeCode >= range[0] && timeCode < range[1]) {
+      return true
+    }
+  }
+  return false
+}
+
+export const isBookedTime = (timeCode, bookedTimes) => {
+  for (let i = 0; i < bookedTimes.length; i++) {
+    const bookedTime = bookedTimes[i]
+    if (bookedTime == timeCode || bookedTime + 0.5 == timeCode) {
+      return true
+    }
+  }
+  return false
 }

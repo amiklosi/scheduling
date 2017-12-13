@@ -1,0 +1,52 @@
+$cellWidth: 100px;
+
+.table {
+  border-collapse: collapse;
+
+  .cell {
+    width: $cellWidth;
+  }
+
+  .none {
+    background-color: #444;
+  }
+
+  .selected {
+    filter: brightness(1.5);
+  }
+
+  .bookable {
+    background-color: #94ff8a;
+  }
+
+  .booked {
+    background-color: brown;
+  }
+
+  .unavailable {
+  }
+
+  .user1Available {
+    background-color: darkcyan;
+  }
+
+  .user2Available {
+    background-color: cyan;
+  }
+}
+
+.weekSelector {
+  & > div {
+    display: inline-block;
+    width: $cellWidth + 2;
+    text-align: center;
+  }
+
+  .nextCell {
+    text-align: right;
+  }
+  .prevCell {
+    text-align: left;
+  }
+
+}

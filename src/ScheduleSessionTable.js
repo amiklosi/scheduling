@@ -15,7 +15,7 @@ export default class ScheduleSessionTable extends React.Component {
     const isUser1Available = isAvailable(cellCode, this.props.user1Availability)
     const isUser2Available = isAvailable(cellCode, this.props.user2Availability)
     const selectedTimeCode = _.get(this.state, 'selectedTimeCode')
-    const isSelected = cellCode == selectedTimeCode || cellCode == selectedTimeCode + 0.5
+    const isSelected = cellCode == selectedTimeCode// || cellCode == selectedTimeCode + 0.5
     const style = (() => {
       if (isBookedTime(cellCode, this.props.bookedTimes)) {
         return styles.booked

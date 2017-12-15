@@ -11,9 +11,18 @@ const handleFetchError = (promise) => new Promise((resolve, reject) => {
 })
 
 export const schedulingApi = (serviceUrl, userId) => {
+
+  const getAvailability = (from, to) => {
+    let begin = from.format('YYYY-MM-DD')
+    let end = to.format('YYYY-MM-DD[T23:59]')
+    console.log('getting avail', begin, end)
+    return fetch(`${serviceUrl}/get-availability/${userId}?begin=${begin}&end=${end}`).then(r => r.json())
+  }
+
   const getAllAvailability = () => {
     return fetch(`${serviceUrl}/get-all-availability/${userId}`).then(r => r.json())
   }
+
   const addNewAvailability = (begin, end, availability, isBlocked) =>
     handleFetchError(fetch(`${serviceUrl}/add-availability/${userId}`,
       {
@@ -52,6 +61,7 @@ export const schedulingApi = (serviceUrl, userId) => {
       })
     )
   return {
+    getAvailability,
     getAllAvailability,
     addNewAvailability,
     updateAvailability,

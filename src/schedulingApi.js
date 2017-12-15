@@ -12,11 +12,12 @@ const handleFetchError = (promise) => new Promise((resolve, reject) => {
 
 export const schedulingApi = (serviceUrl, userId) => {
 
-  const getAvailability = (from, to) => {
-    let begin = from.format('YYYY-MM-DD')
-    let end = to.format('YYYY-MM-DD[T23:59]')
-    console.log('getting avail', begin, end)
-    return fetch(`${serviceUrl}/get-availability/${userId}?begin=${begin}&end=${end}`).then(r => r.json())
+  const getAvailability = ({userId: maybeUserId, begin, end}) => {
+    let b = begin.format('YYYY-MM-DD')
+    let e = end.format('YYYY-MM-DD[T23:59]')
+    const uid = maybeUserId || userId
+    console.log('getting avail', uid, begin, end)
+    return fetch(`${serviceUrl}/get-availability/${uid}?begin=${b}&end=${e}`).then(r => r.json())
   }
 
   const getAllAvailability = () => {

@@ -5,6 +5,7 @@ $cellWidth: 100px;
 
   .cell {
     width: $cellWidth;
+
   }
 
   .none {
@@ -13,6 +14,9 @@ $cellWidth: 100px;
 
   .selected {
     filter: brightness(1.5);
+    .debugInfo {
+      display: inline-block;
+    }
   }
 
   .bookable {
@@ -33,11 +37,16 @@ $cellWidth: 100px;
   .user2Available {
     background-color: cyan;
   }
+
+  .debugInfo {
+    display: none;
+  }
 }
 
 .userSelector {
 
 }
+
 .weekSelector {
   & > div {
     display: inline-block;

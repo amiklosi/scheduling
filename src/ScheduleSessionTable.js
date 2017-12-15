@@ -7,7 +7,7 @@ import moment from 'moment'
 
 export default class ScheduleSessionTable extends React.Component {
   handleMouseOver = (dayIdx, idx) => {
-    this.setState({selectedTimeCode: dayIdx * 24 + idx})
+    this.setState({selectedTimeCode: (dayIdx + 1) % 7 * 24 + idx})
   }
 
   getCellClass = (dayIdx, hourIdx) => {
@@ -41,16 +41,25 @@ export default class ScheduleSessionTable extends React.Component {
       <tr>
         <th className={styles.cell}></th>
         {_.range(7).map(day => <th key={day} className={styles.cell}>
-            {startDate.clone().add(day, 'days').format('MM/D')}<br/>
-            {startDate.clone().add(day, 'days').format('ddd')}
-          </th>)}
+          {startDate.clone().add(day, 'days').format('MM/D')}<br/>
+          {startDate.clone().add(day, 'days').format('ddd')}
+        </th>)}
       </tr>
       </thead>
       <tbody>
       {_.range(48).map(idx =>
         <tr key={idx}>
           <td>{idx % 2 == 0 && codeToTime(idx / 2, 0)}</td>
-          {_.range(7).map(dayIdx => <td className={this.getCellClass(dayIdx, idx / 2)} key={dayIdx} onMouseOver={this.handleMouseOver.bind(this, dayIdx, idx / 2)}>&nbsp;</td>)}
+          {_.range(7).map(dayIdx => {
+              const shiftedDayIndex = (dayIdx + 1) % 7
+              return <td className={this.getCellClass(shiftedDayIndex, idx / 2)} key={dayIdx}
+                         onMouseOver={this.handleMouseOver.bind(this, dayIdx, idx / 2)}>
+                <div className={styles.debugInfo}>{shiftedDayIndex}</div>
+                &nbsp;
+              </td>
+            }
+          )
+          }
         </tr>)
       }
       </tbody>

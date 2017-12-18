@@ -61,7 +61,13 @@ export const schedulingApi = (serviceUrl, userId) => {
         method: "DELETE",
       })
     )
+
+  const bookSession = (user1Id, user2Id, timeCode) => {
+    console.log('booking session', user1Id, user2Id, timeCode)
+  }
+
   return {
+    bookSession,
     getAvailability,
     getAllAvailability,
     addNewAvailability,

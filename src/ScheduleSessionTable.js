@@ -6,8 +6,17 @@ import moment from 'moment'
 
 
 export default class ScheduleSessionTable extends React.Component {
-  handleMouseOver = (dayIdx, idx) => {
-    this.setState({selectedTimeCode: (dayIdx + 1) % 7 * 24 + idx})
+  handleMouseOver = (timeCode) => {
+    this.setState({selectedTimeCode: timeCode})
+  }
+
+  handleMouseOut = () => {
+    this.setState({selectedTimeCode: undefined})
+  }
+
+  handleClick = (timeCode) => {
+    console.log('Booking:', timeCode)
+    this.props.onBookSession(timeCode)
   }
 
   getCellClass = (dayIdx, hourIdx) => {
@@ -52,9 +61,12 @@ export default class ScheduleSessionTable extends React.Component {
           <td>{idx % 2 == 0 && codeToTime(idx / 2, 0)}</td>
           {_.range(7).map(dayIdx => {
               const shiftedDayIndex = (dayIdx + 1) % 7
+            const timeCode = shiftedDayIndex % 7 * 24 + idx / 2
               return <td className={this.getCellClass(shiftedDayIndex, idx / 2)} key={dayIdx}
-                         onMouseOver={this.handleMouseOver.bind(this, dayIdx, idx / 2)}>
-                <div className={styles.debugInfo}>{shiftedDayIndex}</div>
+                         onMouseOver={this.handleMouseOver.bind(this, timeCode)}
+                         onMouseOut={this.handleMouseOut}
+              onClick={this.handleClick.bind(this, timeCode)}>
+                <div className={styles.debugInfo}>{timeCode}</div>
                 &nbsp;
               </td>
             }

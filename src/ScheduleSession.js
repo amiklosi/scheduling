@@ -40,7 +40,7 @@ export default class ScheduleSession extends React.Component {
       ],
 
       bookedTimes: [
-        9, 12, 45
+        // 9, 12, 45
       ],
       startDate: day
     }
@@ -55,6 +55,16 @@ export default class ScheduleSession extends React.Component {
     this.selectStartDate(this.state.startDate)
   }
 
+  handleBookSession = (timeCode) => {
+    console.log('Booking Session', this.state.user1Id, this.state.user2Id, timeCode)
+    const range = this.state.startDate.clone()
+    range.startOf('isoWeek').add(timeCode, 'hours')
+    const rangeFrom = range.clone()
+    const rangeTo = range.clone().add('30', 'minutes')
+    console.log(rangeFrom.format('YYYY-MM-DD HH:mm'), rangeTo.format('YYYY-MM-DD HH:mm'))
+    this.schedulingApi.bookSession(this.state.user1Id, this.state.user2Id, timeCode)
+  }
+
   updateAvailabilities = (startDate) => {
     const begin = startDate
     const end = begin.clone().add(1, 'week')
@@ -65,13 +75,11 @@ export default class ScheduleSession extends React.Component {
       ])
       .then(([user1Avail, user2Avail]) => {
         const flattenSchedule = (schedule) => _(schedule).map('availability').map(avs => avs.map(v => JSON.parse(v))).flatten().value()
-
         const user1Flattened = flattenSchedule(user1Avail.schedules)
         const user2Flattened = flattenSchedule(user2Avail.schedules)
-        console.log('all avail', user1Flattened)
-
+        console.log('all avail', user1Avail.bookings)
+        console.log('all avail', user2Avail.bookings)
         this.setState({user1Availability: user1Flattened, user2Availability: user2Flattened})
-
       })
 
   }
@@ -101,6 +109,7 @@ export default class ScheduleSession extends React.Component {
         user1Availability={this.state.user1Availability}
         user2Availability={this.state.user2Availability}
         bookedTimes={this.state.bookedTimes}
+        onBookSession={this.handleBookSession}
       />
     </div>
   }

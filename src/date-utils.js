@@ -54,7 +54,7 @@ export const isAvailable = (timeCode, availability) => {
 export const isBookedTime = (timeCode, bookedTimes) => {
   for (let i = 0; i < bookedTimes.length; i++) {
     const bookedTime = bookedTimes[i]
-    if (bookedTime == timeCode || bookedTime + 0.5 == timeCode) {
+    if (bookedTime == timeCode) {
       return true
     }
   }

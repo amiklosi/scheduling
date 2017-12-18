@@ -39,7 +39,7 @@ export default class ScheduleSession extends React.Component {
         // [15, 16],
       ],
 
-      bookedTimes: [
+      bookings: [
         // 9, 12, 45
       ],
       startDate: day
@@ -58,11 +58,14 @@ export default class ScheduleSession extends React.Component {
   handleBookSession = (timeCode) => {
     console.log('Booking Session', this.state.user1Id, this.state.user2Id, timeCode)
     const range = this.state.startDate.clone()
-    range.startOf('isoWeek').add(timeCode, 'hours')
+    range.startOf('week').add(timeCode, 'hours')
     const rangeFrom = range.clone()
     const rangeTo = range.clone().add('30', 'minutes')
     console.log(rangeFrom.format('YYYY-MM-DD HH:mm'), rangeTo.format('YYYY-MM-DD HH:mm'))
-    this.schedulingApi.bookSession(this.state.user1Id, this.state.user2Id, timeCode)
+    const begin = rangeFrom.format('YYYY-MM-DD HH:mm')
+    const end = rangeTo.format('YYYY-MM-DD HH:mm')
+    this.schedulingApi.bookSession(this.state.user1Id, this.state.user2Id, begin, end)
+      .then(result => console.log('book result', result))
   }
 
   updateAvailabilities = (startDate) => {
@@ -75,11 +78,22 @@ export default class ScheduleSession extends React.Component {
       ])
       .then(([user1Avail, user2Avail]) => {
         const flattenSchedule = (schedule) => _(schedule).map('availability').map(avs => avs.map(v => JSON.parse(v))).flatten().value()
+        const flattenBookings = (bookings) => bookings.map(b => {
+          const time = moment(JSON.parse(b.during)[0])
+          let weekStart = time.clone().startOf('week')
+          const diff = time.diff(weekStart, 'hours')
+          return diff
+        })
         const user1Flattened = flattenSchedule(user1Avail.schedules)
         const user2Flattened = flattenSchedule(user2Avail.schedules)
-        console.log('all avail', user1Avail.bookings)
-        console.log('all avail', user2Avail.bookings)
-        this.setState({user1Availability: user1Flattened, user2Availability: user2Flattened})
+        const user1Bookings = flattenBookings(user1Avail.bookings)
+        const user2Bookings = flattenBookings(user2Avail.bookings)
+        const bookings = _.uniq(_.concat(user1Bookings, user2Bookings))
+
+        console.log('user 1 avail', user1Flattened)
+        console.log('user 2 avail', user2Flattened)
+        console.log('all bookings', bookings)
+        this.setState({user1Availability: user1Flattened, user2Availability: user2Flattened, bookings})
       })
 
   }
@@ -108,7 +122,7 @@ export default class ScheduleSession extends React.Component {
         startDate={this.state.startDate}
         user1Availability={this.state.user1Availability}
         user2Availability={this.state.user2Availability}
-        bookedTimes={this.state.bookedTimes}
+        bookedTimes={this.state.bookings}
         onBookSession={this.handleBookSession}
       />
     </div>

@@ -62,8 +62,23 @@ export const schedulingApi = (serviceUrl, userId) => {
       })
     )
 
-  const bookSession = (user1Id, user2Id, timeCode) => {
-    console.log('booking session', user1Id, user2Id, timeCode)
+  const bookSession = (user1Id, user2Id, begin, end) => {
+    console.log('booking session', user1Id, user2Id, begin, end)
+    return handleFetchError(fetch(`${serviceUrl}/book-session`,
+      {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        method: "POST",
+        body: JSON.stringify({
+          begin: begin,
+          end: end,
+          user1: user1Id,
+          user2: user2Id
+        })
+      })
+    )
   }
 
   return {

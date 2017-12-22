@@ -14,9 +14,8 @@ export default class ScheduleSessionTable extends React.Component {
     this.setState({selectedTimeCode: undefined})
   }
 
-  handleClick = (timeCode) => {
-    console.log('Booking:', timeCode)
-    this.props.onBookSession(timeCode)
+  handleClick = (date) => {
+    this.props.onBookSession(date)
   }
 
   getCellClass = (dayIdx, hourIdx) => {
@@ -60,12 +59,11 @@ export default class ScheduleSessionTable extends React.Component {
         <tr key={idx}>
           <td>{idx % 2 == 0 && codeToTime(idx / 2, 0)}</td>
           {_.range(7).map(dayIdx => {
-              const shiftedDayIndex = (dayIdx + 1) % 7
-            const timeCode = shiftedDayIndex % 7 * 24 + idx / 2
-              return <td className={this.getCellClass(shiftedDayIndex, idx / 2)} key={dayIdx}
+            const timeCode = dayIdx % 7 * 24 + idx / 2
+              return <td className={this.getCellClass(dayIdx, idx / 2)} key={dayIdx}
                          onMouseOver={this.handleMouseOver.bind(this, timeCode)}
                          onMouseOut={this.handleMouseOut}
-              onClick={this.handleClick.bind(this, timeCode)}>
+              onClick={this.handleClick.bind(this, this.props.startDate.clone().add(dayIdx, 'days').add(idx / 2, 'hours'))}>
                 <div className={styles.debugInfo}>{timeCode}</div>
                 &nbsp;
               </td>

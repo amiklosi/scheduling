@@ -22,8 +22,8 @@ const WeekSelector = ({goPrev, goNext}) => <div className={styles.weekSelector}>
 export default class ScheduleSession extends React.Component {
   constructor() {
     super()
-    let day = moment()
-    day.startOf('isoWeek')
+    let day = moment('2017-04-01')
+    day.startOf('week')
 
     this.state = {
       user1Id: 'KwvFfQf1hIYmp1uBzUaQz06A1ty2',  // student bender
@@ -55,17 +55,28 @@ export default class ScheduleSession extends React.Component {
     this.selectStartDate(this.state.startDate)
   }
 
-  handleBookSession = (timeCode) => {
-    console.log('Booking Session', this.state.user1Id, this.state.user2Id, timeCode)
-    const range = this.state.startDate.clone()
-    range.startOf('week').add(timeCode, 'hours')
-    const rangeFrom = moment.utc(range)
-    const rangeTo = rangeFrom.clone().add('30', 'minutes')
-    console.log(rangeFrom.format('YYYY-MM-DD HH:mm'), rangeTo.format('YYYY-MM-DD HH:mm'))
-    const begin = rangeFrom.format('YYYY-MM-DD HH:mm')
-    const end = rangeTo.format('YYYY-MM-DD HH:mm')
+  handleBookSession = (date) => {
+    const utcRangeFrom = date.utc()
+    const utcRangeTo = utcRangeFrom.clone().add('30', 'minutes')
+
+    const begin = utcRangeFrom.format('YYYY-MM-DD HH:mm')
+    const end = utcRangeTo.format('YYYY-MM-DD HH:mm')
+    console.log('booking utc time ', begin, end)
     this.schedulingApi.bookSession(this.state.user1Id, this.state.user2Id, begin, end)
       .then(result => console.log('book result', result))
+
+    // const range = this.state.startDate.clone().startOf('week').utc().add(timeCode, 'hours')
+    // console.log('utc range', range.format('YYYY-MM-DD HH:mm'))
+    // range.local()
+    // console.log('local range', range.format('YYYY-MM-DD HH:mm'))
+    // const rangeFrom = moment(range)
+    // const rangeTo = rangeFrom.clone().add('30', 'minutes')
+    // console.log('range in current timezone')
+    // console.log(rangeFrom.format('YYYY-MM-DD HH:mm'), rangeTo.format('YYYY-MM-DD HH:mm'))
+    //
+    // const utcRangeFrom = moment.utc(range)
+    // const utcRangeTo = utcRangeFrom.clone().add('30', 'minutes')
+    // console.log(utcRangeFrom.format('YYYY-MM-DD HH:mm'), utcRangeTo.format('YYYY-MM-DD HH:mm'))
   }
 
   updateAvailabilities = (startDate) => {
@@ -90,9 +101,9 @@ export default class ScheduleSession extends React.Component {
         const user2Bookings = flattenBookings(user2Avail.bookings)
         const bookings = _.uniq(_.concat(user1Bookings, user2Bookings))
 
-        console.log('user 1 avail', user1Flattened)
-        console.log('user 2 avail', user2Flattened)
-        console.log('all bookings', bookings)
+        // console.log('user 1 avail', user1Flattened)
+        // console.log('user 2 avail', user2Flattened)
+        // console.log('all bookings', bookings)
         this.setState({user1Availability: user1Flattened, user2Availability: user2Flattened, bookings})
       })
 

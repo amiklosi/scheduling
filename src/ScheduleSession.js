@@ -1,6 +1,6 @@
 import React from 'react'
 import ScheduleSessionTable from "./ScheduleSessionTable"
-import moment from 'moment'
+import moment from 'moment-timezone'
 import styles from './ScheduleSession.scss'
 import {schedulingApi} from "./schedulingApi"
 
@@ -64,22 +64,10 @@ export default class ScheduleSession extends React.Component {
     console.log('booking utc time ', begin, end)
     this.schedulingApi.bookSession(this.state.user1Id, this.state.user2Id, begin, end)
       .then(result => console.log('book result', result))
-
-    // const range = this.state.startDate.clone().startOf('week').utc().add(timeCode, 'hours')
-    // console.log('utc range', range.format('YYYY-MM-DD HH:mm'))
-    // range.local()
-    // console.log('local range', range.format('YYYY-MM-DD HH:mm'))
-    // const rangeFrom = moment(range)
-    // const rangeTo = rangeFrom.clone().add('30', 'minutes')
-    // console.log('range in current timezone')
-    // console.log(rangeFrom.format('YYYY-MM-DD HH:mm'), rangeTo.format('YYYY-MM-DD HH:mm'))
-    //
-    // const utcRangeFrom = moment.utc(range)
-    // const utcRangeTo = utcRangeFrom.clone().add('30', 'minutes')
-    // console.log(utcRangeFrom.format('YYYY-MM-DD HH:mm'), utcRangeTo.format('YYYY-MM-DD HH:mm'))
   }
 
   updateAvailabilities = (startDate) => {
+    console.log('begin', startDate.format())
     const begin = startDate
     const end = begin.clone().add(1, 'week')
     Promise.all(
@@ -88,20 +76,32 @@ export default class ScheduleSession extends React.Component {
         this.schedulingApi.getAvailability({userId: this.state.user2Id, begin, end})
       ])
       .then(([user1Avail, user2Avail]) => {
-        const flattenSchedule = (schedule) => _(schedule).map('availability').map(avs => avs.map(v => JSON.parse(v))).flatten().value()
+        const flattenSchedule = (schedule) => _(schedule).map(sch => {
+            return sch.availability.map(v => {
+              const value = JSON.parse(v)
+              console.log('v', sch)
+              const m1 = begin.clone().add(value[0], 'hours').tz(sch.time_zone).utcOffset() / 60
+              const m2 = begin.clone().add(value[1], 'hours').tz(sch.time_zone).utcOffset() / 60
+              const localOffset = begin.clone().add(value[0], 'hours').utcOffset() / 60
+              console.log(m1,m2,localOffset)
+              return [value[0] - m1 + localOffset, value[1] - m2 + localOffset]
+            })
+          }
+        ).flatten().value()
         const flattenBookings = (bookings) => bookings.map(b => {
           const time = moment(JSON.parse(b.during)[0])
           let weekStart = time.clone().startOf('week')
           const diff = time.diff(weekStart, 'hours')
           return diff
         })
+        console.log(user1Avail)
         const user1Flattened = flattenSchedule(user1Avail.schedules)
         const user2Flattened = flattenSchedule(user2Avail.schedules)
         const user1Bookings = flattenBookings(user1Avail.bookings)
         const user2Bookings = flattenBookings(user2Avail.bookings)
         const bookings = _.uniq(_.concat(user1Bookings, user2Bookings))
 
-        // console.log('user 1 avail', user1Flattened)
+        console.log('user 1 avail', user1Flattened)
         // console.log('user 2 avail', user2Flattened)
         // console.log('all bookings', bookings)
         this.setState({user1Availability: user1Flattened, user2Availability: user2Flattened, bookings})

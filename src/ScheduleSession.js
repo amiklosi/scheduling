@@ -22,7 +22,8 @@ const WeekSelector = ({goPrev, goNext}) => <div className={styles.weekSelector}>
 export default class ScheduleSession extends React.Component {
   constructor() {
     super()
-    let day = moment('2017-04-01')
+    // let day = moment('2017-04-01')
+    let day = moment()
     day.startOf('week')
 
     this.state = {
@@ -76,6 +77,8 @@ export default class ScheduleSession extends React.Component {
         this.schedulingApi.getAvailability({userId: this.state.user2Id, begin, end})
       ])
       .then(([user1Avail, user2Avail]) => {
+        console.log('user 1 avail', user1Avail)
+        console.log('user 2 avail', user2Avail)
         const flattenSchedule = (schedule) => _(schedule).map(sch => {
             return sch.availability.map(v => {
               const value = JSON.parse(v)
@@ -102,7 +105,7 @@ export default class ScheduleSession extends React.Component {
         const bookings = _.uniq(_.concat(user1Bookings, user2Bookings))
 
         console.log('user 1 avail', user1Flattened)
-        // console.log('user 2 avail', user2Flattened)
+        console.log('user 2 avail', user2Flattened)
         // console.log('all bookings', bookings)
         this.setState({user1Availability: user1Flattened, user2Availability: user2Flattened, bookings})
       })

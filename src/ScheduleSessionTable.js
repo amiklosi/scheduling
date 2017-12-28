@@ -28,9 +28,9 @@ export default class ScheduleSessionTable extends React.Component {
       if (isBookedTime(cellCode, this.props.bookedTimes)) {
         return styles.booked
       }
-      if (isUser1Available && isUser2Available) {
-        return styles.bookable
-      }
+      // if (isUser1Available && isUser2Available) {
+      //   return styles.bookable
+      // }
       if (isUser1Available) {
         return styles.user1Available
       }

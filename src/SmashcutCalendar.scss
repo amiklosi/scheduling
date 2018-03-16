@@ -4,11 +4,24 @@ $cellWidth: 194px;
   border-collapse: collapse;
   background-color: #303030;
 
+  .headerCell {
+    border-bottom: 1px solid #000000;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.24);
+    background-color: #303030;
+    border-right: 1px solid #000;
+    padding-left: 20px;
+    text-align: left;
+    padding-top: 9px;
+  }
+
   .cell {
-    height: 50px;
+    height: 40px;
     width: $cellWidth;
     min-width: 100px;
     text-align: left;
+    background-color: #303030;
+    border-right: 1px solid #000;
+    border-bottom: 1px solid #000000;
   }
 
   th:nth-child(1),
@@ -19,10 +32,8 @@ $cellWidth: 194px;
 
   .timeCell {
     font-size: 11px;
-  }
-
-  .none {
-    background-color: #444;
+    border-right: 1px solid #000;
+    vertical-align: top;
   }
 
   .selected {
@@ -34,6 +45,7 @@ $cellWidth: 194px;
 
   .dayName {
     font-size: 13px;
+    font-weight: normal;
     color: #cccccc;
   }
 
@@ -41,47 +53,10 @@ $cellWidth: 194px;
     font-size: 36px;
     font-weight: 500;
     color: #ffffff;
-  }
-
-  .bookable {
-    background-color: #94ff8a;
-  }
-
-  .booked {
-    background-color: brown;
-  }
-
-  .unavailable {
-  }
-
-  .user1Available {
-    background-color: darkcyan;
-  }
-
-  .user2Available {
-    background-color: cyan;
+    margin-top: 8px;
   }
 
   .debugInfo {
     display: none;
   }
-}
-
-.userSelector {
-
-}
-
-.weekSelector {
-  & > div {
-    display: inline-block;
-    width: $cellWidth + 2;
-  }
-
-  .nextCell {
-    text-align: right;
-  }
-  .prevCell {
-    text-align: left;
-  }
-
 }

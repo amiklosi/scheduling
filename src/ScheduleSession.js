@@ -10,12 +10,12 @@ const UserSelector = ({selectFirstUser, selectSecondUser}) => <div className={st
 
 const WeekSelector = ({goPrev, goNext}) => <div className={styles.weekSelector}>
   <div onClick={goPrev} className={styles.prevCell}>&lt; Prev</div>
-  <div>b</div>
-  <div>c</div>
-  <div>d</div>
-  <div>e</div>
-  <div>f</div>
-  <div>g</div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
   <div onClick={goNext} className={styles.nextCell}>Next &gt;</div>
 </div>
 

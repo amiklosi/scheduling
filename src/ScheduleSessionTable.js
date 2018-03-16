@@ -49,15 +49,16 @@ export default class ScheduleSessionTable extends React.Component {
       <tr>
         <th className={styles.cell}></th>
         {_.range(7).map(day => <th key={day} className={styles.cell}>
-          {startDate.clone().add(day, 'days').format('MM/D')}<br/>
-          {startDate.clone().add(day, 'days').format('ddd')}
+          <div className={styles.dayName}>{startDate.clone().add(day, 'days').format('dddd')}</div>
+          <div className={styles.day}>{startDate.clone().add(day, 'days').format('D')}</div>
+
         </th>)}
       </tr>
       </thead>
       <tbody>
       {_.range(48).map(idx =>
         <tr key={idx}>
-          <td>{idx % 2 == 0 && codeToTime(idx / 2, 0)}</td>
+          <td className={styles.timeCell} width="80px">{codeToTime(idx / 2, 0)}</td>
           {_.range(7).map(dayIdx => {
             const timeCode = dayIdx % 7 * 24 + idx / 2
               return <td className={this.getCellClass(dayIdx, idx / 2)} key={dayIdx}

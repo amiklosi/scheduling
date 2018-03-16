@@ -1,11 +1,23 @@
-$cellWidth: 100px;
+$cellWidth: 194px;
 
 .table {
   border-collapse: collapse;
+  background-color: #303030;
 
   .cell {
     width: $cellWidth;
+    min-width: 100px;
+    text-align: left;
+  }
 
+  th:nth-child(1),
+  td:nth-child(1) {
+    width: 60px; /*becomes 218px with padding*/
+    min-width: 60px;
+  }
+
+  .timeCell {
+    font-size: 11px;
   }
 
   .none {
@@ -17,6 +29,17 @@ $cellWidth: 100px;
     .debugInfo {
       display: inline-block;
     }
+  }
+
+  .dayName {
+    font-size: 13px;
+    color: #cccccc;
+  }
+
+  .day {
+    font-size: 36px;
+    font-weight: 500;
+    color: #ffffff;
   }
 
   .bookable {
@@ -51,7 +74,6 @@ $cellWidth: 100px;
   & > div {
     display: inline-block;
     width: $cellWidth + 2;
-    text-align: center;
   }
 
   .nextCell {

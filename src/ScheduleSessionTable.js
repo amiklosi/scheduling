@@ -17,11 +17,13 @@ export default class ScheduleSessionTable extends React.Component {
   }
 
   render() {
-    return <SmashcutCalendar
-      startDate={this.props.startDate}
-      cellRenderer={this.cellRenderer}
-      cellClick={this.cellClick}
-    />
+    return <div className={styles.container}>
+      <SmashcutCalendar
+        startDate={this.props.startDate}
+        cellRenderer={this.cellRenderer}
+        cellClick={this.cellClick}
+      />
+    </div>
 
   }
 }

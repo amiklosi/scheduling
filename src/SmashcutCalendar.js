@@ -48,11 +48,16 @@ export default class SmashcutCalendar extends React.Component {
       <thead>
       <tr>
         <th className={styles.q}></th>
-        {_.range(7).map(day => <th key={day} className={styles.headerCell}>
-          <div className={styles.dayName}>{startDate.clone().add(day, 'days').format('dddd')}</div>
-          <div className={styles.day}>{startDate.clone().add(day, 'days').format('D')}</div>
+        {_.range(7).map(day => {
+          const date = startDate.clone().add(day, 'days')
+          const isCurrent = date.isSame(moment(), 'day')
+          console.log(date)
+          return <th key={day} className={classnames(styles.headerCell, {[styles.currentDay]: isCurrent})}>
+            <div className={styles.dayName}>{startDate.clone().add(day, 'days').format('dddd')}</div>
+            <div className={styles.day}>{startDate.clone().add(day, 'days').format('D')}</div>
 
-        </th>)}
+          </th>
+        })}
       </tr>
       </thead>
       <tbody>

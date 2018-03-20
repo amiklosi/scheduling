@@ -9,7 +9,7 @@ import SmashcutCalendar from "./SmashcutCalendar"
 export default class ScheduleSessionTable extends React.Component {
 
   cellRenderer = (timeCode) => {
-    return <div>. {timeCode}</div>
+    return <div></div>
   }
 
   cellClick = (timeCode) => {
